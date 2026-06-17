@@ -19,7 +19,7 @@
 	/><!-- 1200 × 630 pixels para capa.jpg -->
 </svelte:head>
 
-<div class="light min-h-screen">
+<div class="min-h-screen">
 	<main class="min-h-screen bg-background">
 		{@render children()}
 	</main>

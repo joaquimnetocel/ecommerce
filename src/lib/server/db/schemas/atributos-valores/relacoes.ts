@@ -4,7 +4,7 @@ import { tabelaAtributosValores } from './tabela';
 
 export const relacoesAtributosValores = relations(tabelaAtributosValores, ({ one }) => ({
 	relTipo: one(tabelaAtributos, {
-		fields: [tabelaAtributosValores.keyTipos],
-		references: [tabelaAtributos.idTipos],
+		fields: [tabelaAtributosValores.keyAtributos],
+		references: [tabelaAtributos.idAtributos],
 	}),
 }));
