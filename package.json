@@ -16,7 +16,9 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"db:erd": "drizzle-erd --in ./src/lib/server/db/schema.ts --out ./static/erd.svg"
+		"db:erd": "drizzle-erd --in ./src/lib/server/db/schema.ts --out ./static/erd.svg",
+		"db:criar": "node ./static/scripts/scriptCriarBancoDeDados.js",
+		"db:apagar": "node ./static/scripts/scriptApagarBancoDeDados.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.4",
@@ -28,9 +30,10 @@
 		"@sveltejs/kit": "^2.57.0",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@tailwindcss/vite": "^4.2.2",
-		"@types/node": "^22",
+		"@types/pg": "^8.20.0",
 		"bits-ui": "^2.18.1",
 		"clsx": "^2.1.1",
+		"dotenv": "^17.4.2",
 		"drizzle-erd": "^0.0.1-alpha.11",
 		"drizzle-kit": "^0.31.10",
 		"drizzle-orm": "^0.45.2",
@@ -39,6 +42,7 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.17.0",
 		"globals": "^17.4.0",
+		"pg": "^8.21.0",
 		"postgres": "^3.4.9",
 		"prettier": "^3.8.1",
 		"prettier-plugin-svelte": "^3.5.1",

@@ -1,7 +1,7 @@
 import { funcaoGerarSku } from '$lib/funcoes/funcaoGerarSku';
 import { tabelaVariantes } from '$lib/server/db/schema';
 import type { typeExecutor } from '$lib/server/db/typeExecutor';
-import type { typeSchemaOutput } from '../schema';
+import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoCriarVariantes({
 	dados,

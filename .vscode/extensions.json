@@ -3,12 +3,17 @@
 		"svelte.svelte-vscode",
 		"esbenp.prettier-vscode",
 		"dbaeumer.vscode-eslint",
-		"bradlc.vscode-tailwindcss",
-
 		"natqe.reload", // RELOAD
 		"dhrxvextensions.files-to-llm-prompt", // PARA ENVIAR ARQUIVOS PARA IA
 		"chanzhaoyu.svelte-5-snippets", // SNIPPETS
 		"formulahendry.auto-rename-tag", // AUTO RENAME TAG
-		"mikestead.dotenv" // ENV
+		"mikestead.dotenv", // ENV
+
+		// TAILWIND
+		"heybourn.headwind",
+		"bradlc.vscode-tailwindcss",
+		"csstools.postcss",
+		"stivo.tailwind-fold"
+		/////
 	]
 }

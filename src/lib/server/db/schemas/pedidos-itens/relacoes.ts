@@ -1,10 +1,10 @@
 import { relations } from 'drizzle-orm';
 import { tabelaPedidos } from '../pedidos/tabela';
-import { tabelaItens } from './tabela';
+import { tabelaPedidosItens } from './tabela';
 
-export const relacoesItensDePedidos = relations(tabelaItens, ({ one }) => ({
+export const relacoesItensDePedidos = relations(tabelaPedidosItens, ({ one }) => ({
 	relPedido: one(tabelaPedidos, {
-		fields: [tabelaItens.keyPedidos],
+		fields: [tabelaPedidosItens.keyPedidos],
 		references: [tabelaPedidos.idPedidos],
 	}),
 }));

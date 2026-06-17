@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
-import { tabelaItens } from '../itens/tabela';
+import { tabelaPedidosItens } from '../pedidos-itens/tabela';
 import { tabelaPedidos } from './tabela';
 
 export const relacoesPedidos = relations(tabelaPedidos, ({ many }) => ({
-	relItensDePedidos: many(tabelaItens),
+	relItensDePedidos: many(tabelaPedidosItens),
 }));

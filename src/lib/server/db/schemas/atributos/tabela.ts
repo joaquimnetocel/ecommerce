@@ -1,16 +1,16 @@
 import { boolean, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { tabelaProdutos } from '../produtos/tabela';
 
-export const tabelaTipos = pgTable('tabelaTipos', {
-	idTipos: uuid('idTipos').defaultRandom().primaryKey(),
-	keyProdutos: uuid('keyProdutos')
+export const tabelaAtributos = pgTable('tabelaAtributos', {
+	idAtributos: uuid().defaultRandom().primaryKey(),
+	keyProdutos: uuid()
 		.notNull()
 		.references(() => tabelaProdutos.idProdutos, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		}),
-	nome: varchar('nome', {
+	campoNome: varchar({
 		length: 100,
 	}).notNull(),
-	ativo: boolean('ativo').notNull().default(true),
+	campoAtivo: boolean().notNull().default(true),
 });

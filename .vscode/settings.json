@@ -41,6 +41,19 @@
 	"workbench.startupEditor": "none", // START WITHOUT AN EDITOR IF NONE ARE RESTORED FROM THE PREVIOUS SESSION.
 	/////
 	// WINDOW:
-	"window.title": "${rootName}" // VSCODE WINDOW TITLE.
+	"window.title": "${rootName}",
+	"sqltools.connections": [
+		{
+			"ssh": "Disabled",
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"askForPassword": true,
+			"driver": "PostgreSQL",
+			"name": "tteste",
+			"database": "bancoTesteEcommerce",
+			"username": "postgres"
+		}
+	] // VSCODE WINDOW TITLE.
 	/////
 }

@@ -5,13 +5,13 @@ import { tabelaProdutos } from '../produtos/tabela';
 export const tabelaCategoriasProdutos = pgTable(
 	'tabelaCategoriasProdutos',
 	{
-		keyProdutos: uuid('keyProdutos')
+		keyProdutos: uuid()
 			.notNull()
 			.references(() => tabelaProdutos.idProdutos, {
 				onDelete: 'cascade',
 				onUpdate: 'cascade',
 			}),
-		keyCategorias: uuid('keyCategorias')
+		keyCategorias: uuid()
 			.notNull()
 			.references(() => tabelaCategorias.idCategorias, {
 				onDelete: 'cascade',

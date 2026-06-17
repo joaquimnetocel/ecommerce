@@ -3,32 +3,32 @@ import { tabelaPedidos } from '../pedidos/tabela';
 // import { tabelaProdutos } from '../produtos/tabela';
 import { tabelaVariantes } from '../variantes/tabela';
 
-export const tabelaItens = pgTable('tabelaItens', {
-	idItens: uuid('idItens').defaultRandom().primaryKey(),
-	keyPedidos: uuid('keyPedidos')
+export const tabelaPedidosItens = pgTable('tabelaPedidosItens', {
+	idItens: uuid().defaultRandom().primaryKey(),
+	keyPedidos: uuid()
 		.notNull()
 		.references(() => tabelaPedidos.idPedidos, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		}),
-	keyVariantes: uuid('variant_id')
+	keyVariantes: uuid()
 		.references(() => tabelaVariantes.idVariantes, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		})
 		.notNull(),
-	campoPrecoUnitario: numeric('campoPrecoUnitario', {
+	campoPrecoUnitario: numeric({
 		precision: 12,
 		scale: 2,
 	}).notNull(),
-	campoQuantidade: integer('campoQuantidade').notNull(),
-	// keyProdutos: uuid('keyProdutos')
+	campoQuantidade: integer().notNull(),
+	// keyProdutos: uuid()
 	// 	.notNull()
 	// 	.references(() => tabelaProdutos.idProdutos, {
 	// 		onDelete: 'cascade',
 	// 		onUpdate: 'cascade',
 	// 	}),
-	// campoNome: varchar('campoNome', {
+	// campoNome: varchar({
 	// 	length: 255,
 	// }).notNull(),
 });

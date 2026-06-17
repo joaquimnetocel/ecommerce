@@ -16,6 +16,12 @@ export const constMenu: typeItemDoMenu[] = [
 		icon: PackageSearch,
 		children: [
 			{
+				id: 'criar',
+				type: 'link',
+				title: 'CRIAR',
+				url: '/admin/produtos/criar',
+			},
+			{
 				id: 'ativos',
 				type: 'link',
 				title: 'ATIVOS',

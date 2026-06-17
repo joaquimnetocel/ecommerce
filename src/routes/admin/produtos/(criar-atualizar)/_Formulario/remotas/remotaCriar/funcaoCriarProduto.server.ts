@@ -2,7 +2,7 @@ import { funcaoGerarSlug } from '$lib/funcoes/funcaoGerarSlug';
 import { tabelaProdutos } from '$lib/server/db/schema';
 import type { typeExecutor } from '$lib/server/db/typeExecutor';
 import { error } from '@sveltejs/kit';
-import type { typeSchemaOutput } from '../schema';
+import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoCriarProduto({
 	dados,
