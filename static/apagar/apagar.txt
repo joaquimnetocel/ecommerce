@@ -1,0 +1,11 @@
+import type { tabelaProdutos, tabelaVariantes } from '$lib/server/db/schema';
+
+type typeCriarProduto = typeof tabelaProdutos.$inferInsert;
+type typeCriarVariante = typeof tabelaVariantes.$inferInsert;
+
+type typeCriarProdutoOmit = Omit<typeCriarProduto, 'campoSlug' | 'campoCriadoEm'>;
+type typeCriarVarianteOmit = Omit<typeCriarVariante, 'keyProdutos' | 'campoCriadoEm'>;
+
+export type typeDadosDoFormulario = typeCriarProdutoOmit & {
+	relVariantes: typeCriarVarianteOmit[];
+};

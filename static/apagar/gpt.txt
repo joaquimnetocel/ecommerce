@@ -1,0 +1,147 @@
+import {
+	pgTable,
+	uuid,
+	varchar,
+	text,
+	numeric,
+	integer,
+	boolean,
+	timestamp,
+	primaryKey
+} from 'drizzle-orm/pg-core';
+
+/* =========================
+   USUÁRIOS
+========================= */
+
+export const users = pgTable('users', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	nome: varchar('nome', { length: 255 }).notNull(),
+	email: varchar('email', { length: 255 }).unique().notNull(),
+	senhaHash: text('senha_hash').notNull(),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
+/* =========================
+   ENDEREÇOS
+========================= */
+
+export const addresses = pgTable('addresses', {
+	id: uuid('id').defaultRandom().primaryKey(),
+
+	userId: uuid('user_id')
+		.notNull()
+		.references(() => users.id, {
+			onDelete: 'cascade'
+		}),
+
+	cep: varchar('cep', { length: 20 }).notNull(),
+	logradouro: varchar('logradouro', { length: 255 }).notNull(),
+	numero: varchar('numero', { length: 50 }),
+	complemento: varchar('complemento', { length: 255 }),
+	bairro: varchar('bairro', { length: 255 }).notNull(),
+	cidade: varchar('cidade', { length: 255 }).notNull(),
+	estado: varchar('estado', { length: 2 }).notNull()
+});
+
+/* =========================
+   VARIAÇÕES
+========================= */
+
+export const productVariants = pgTable('product_variants', {
+	id: uuid('id').defaultRandom().primaryKey(),
+
+	productId: uuid('product_id')
+		.notNull()
+		.references(() => products.id, {
+			onDelete: 'cascade'
+		}),
+
+	sku: varchar('sku', { length: 100 })
+		.unique()
+		.notNull(),
+
+	cor: varchar('cor', { length: 100 }),
+
+	tamanho: varchar('tamanho', {
+		length: 100
+	}),
+
+	preco: numeric('preco', {
+		precision: 12,
+		scale: 2
+	}).notNull(),
+
+	estoque: integer('estoque')
+		.default(0)
+		.notNull()
+});
+
+/* =========================
+   CARRINHO
+========================= */
+
+export const carts = pgTable('carts', {
+	id: uuid('id').defaultRandom().primaryKey(),
+
+	userId: uuid('user_id')
+		.references(() => users.id),
+
+	createdAt: timestamp('created_at')
+		.defaultNow()
+		.notNull()
+});
+
+/* =========================
+   ITENS CARRINHO
+========================= */
+
+export const cartItems = pgTable('cart_items', {
+	id: uuid('id').defaultRandom().primaryKey(),
+
+	cartId: uuid('cart_id')
+		.notNull()
+		.references(() => carts.id, {
+			onDelete: 'cascade'
+		}),
+
+	variantId: uuid('variant_id')
+		.notNull()
+		.references(() => productVariants.id),
+
+	quantidade: integer('quantidade')
+		.notNull()
+});
+
+
+
+/* =========================
+   PAGAMENTOS
+========================= */
+
+export const payments = pgTable('payments', {
+	id: uuid('id').defaultRandom().primaryKey(),
+
+	orderId: uuid('order_id')
+		.notNull()
+		.references(() => orders.id),
+
+	provedor: varchar('provedor', {
+		length: 50
+	}).notNull(),
+
+	status: varchar('status', {
+		length: 50
+	}).notNull(),
+
+	transactionId: varchar(
+		'transaction_id',
+		{
+			length: 255
+		}
+	),
+
+	createdAt: timestamp('created_at')
+		.defaultNow()
+		.notNull()
+});
