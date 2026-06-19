@@ -8,6 +8,7 @@
 
 	let categorias = funcaoMontarArvore(constCategorias);
 	let selecionadas = new SvelteSet<string>();
+	let query = $state('');
 
 	// MAPA GLOBAL (id -> nó)
 	const mapa = new SvelteMap<string, typeCategoriaArvore>();
@@ -70,11 +71,45 @@
 		// =========================
 		atualizarPais(no);
 	}
+
+	function filtrarArvore(no: typeCategoriaArvore, query: string): typeCategoriaArvore | null {
+		if (!query) return no;
+
+		const match = no.campoNome.toLowerCase().includes(query.toLowerCase());
+
+		const filhasFiltradas = no.filhas
+			.map((f) => filtrarArvore(f, query))
+			.filter(Boolean) as typeCategoriaArvore[];
+
+		if (match || filhasFiltradas.length) {
+			return {
+				...no,
+				filhas: filhasFiltradas,
+			};
+		}
+
+		return null;
+	}
+
+	const categoriasFiltradas = $derived(
+		query
+			? categorias
+					.map((raiz) => filtrarArvore(raiz, query))
+					.filter((n): n is typeCategoriaArvore => n !== null)
+			: categorias,
+	);
 </script>
+
+<input
+	type="text"
+	bind:value={query}
+	placeholder="Pesquisar categoria..."
+	class="w-full rounded border px-3 py-2"
+/>
 
 <form class="space-y-4">
 	<ul>
-		{#each categorias as categoria (categoria.idCategorias)}
+		{#each categoriasFiltradas as categoria (categoria.idCategorias)}
 			<CategoriaTree {categoria} nivel={0} {selecionadas} {funcaoToggle} />
 		{/each}
 	</ul>

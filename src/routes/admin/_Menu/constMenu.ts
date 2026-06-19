@@ -1,4 +1,4 @@
-import { Database, HouseIcon, Logs, PackageSearch } from '@lucide/svelte/icons';
+import { Database, HouseIcon, Logs, PackageSearch, Settings2 } from '@lucide/svelte/icons';
 import type { typeItemDoMenu } from './typeItemDoMenu';
 
 export const constMenu: typeItemDoMenu[] = [
@@ -41,6 +41,13 @@ export const constMenu: typeItemDoMenu[] = [
 		title: 'BANDO DE DADOS',
 		url: '/admin/banco',
 		icon: Database,
+	},
+	{
+		id: 'categorias',
+		type: 'link',
+		title: 'CATEGORIAS',
+		url: '/admin/categorias',
+		icon: Settings2,
 	},
 	{
 		id: 'exemplo',
