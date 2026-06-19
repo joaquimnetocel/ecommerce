@@ -16,43 +16,40 @@
 	let { dados }: { dados: typeDados } = $props();
 </script>
 
-<Card class="border-slate-700 bg-slate-800 shadow-lg">
+<Card class="classeCard1">
 	<CardHeader>
-		<CardTitle class="text-2xl font-semibold text-white">PRODUTO</CardTitle>
+		<CardTitle class="classeCard1Titulo">PRODUTO</CardTitle>
 		<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
 	</CardHeader>
 
 	<CardContent class="space-y-4">
 		<div class="space-y-1">
-			<Label class="text-white">NOME:</Label>
+			<Label class="classeCard1Label">NOME:</Label>
 			<Input
 				autofocus={true}
 				bind:value={dados.inputs.formProdutos.campoNome}
-				class="border-slate-500 bg-white"
+				class="classeCard1Input"
 				required
 				autocomplete="off"
 			/>
 			{#if dados.erros.formProdutos?.campoNome !== undefined}
-				<div class="text-sm text-red-400">
+				<div class="classeCard1Erro">
 					{dados.erros.formProdutos?.campoNome}
 				</div>
 			{/if}
 		</div>
 		<div class="space-y-1">
-			<Label class="text-white">DESCRIÇÃO:</Label>
+			<Label class="classeCard1Label">DESCRIÇÃO:</Label>
 			<Textarea
 				rows={6}
 				bind:value={dados.inputs.formProdutos.campoDescricao}
-				class="border-slate-500 bg-white"
+				class="classeCard1Input"
 				autocomplete="off"
 			/>
 		</div>
 		<div class="flex items-center gap-3">
-			<Label class="text-white">
-				<Checkbox
-					bind:checked={dados.inputs.formProdutos.campoAtivo}
-					class="border-slate-400 bg-white data-[state=checked]:bg-sky-500"
-				/>
+			<Label class="classeCard1Label">
+				<Checkbox bind:checked={dados.inputs.formProdutos.campoAtivo} class="classeCard1Checkbox" />
 				{dados.inputs.formProdutos.campoAtivo ? 'ATIVO' : 'INATIVO'}
 			</Label>
 		</div>

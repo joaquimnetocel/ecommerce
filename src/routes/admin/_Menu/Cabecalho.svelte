@@ -17,7 +17,7 @@
 						>
 							IR PARA...
 
-							<ChevronDown class="menu-chevron ms-auto transition-transform duration-200" />
+							<ChevronDown class="ms-auto transition-transform duration-200" />
 						</Sidebar.MenuButton>
 					{/snippet}
 				</DropdownMenu.Trigger>

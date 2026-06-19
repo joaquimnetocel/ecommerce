@@ -1,0 +1,53 @@
+@reference "tailwindcss";
+
+.classeTitulo {
+	@apply text-2xl font-semibold;
+}
+.classeCard1 {
+	@apply border-slate-700 bg-slate-800 shadow-lg shadow-md;
+}
+.classeCard1Titulo {
+	@apply text-2xl font-semibold text-white;
+}
+.classeCard1Label {
+	@apply text-white;
+}
+.classeCard1Input {
+	@apply border-slate-500 bg-white;
+}
+.classeCard1Checkbox {
+	@apply border-slate-400 bg-white data-[state=checked]:bg-sky-500;
+}
+.classeCard1Erro {
+	@apply text-sm text-red-400;
+}
+.classeCard2 {
+	@apply bg-slate-700 shadow-md;
+}
+.classeCard2Titulo {
+	@apply text-2xl font-semibold text-white;
+}
+.classeCard2Descricao {
+	@apply text-white;
+}
+.classeCard2Input {
+	@apply border-slate-500 bg-white;
+}
+.classeCard2Erro {
+	@apply text-sm text-red-400;
+}
+.classeCard2Checkbox {
+	@apply border-slate-400 bg-white data-[state=checked]:bg-sky-500;
+}
+.classeCard4 {
+	@apply border-4 border-slate-700 bg-slate-300 shadow-md;
+}
+.classeCard4Input {
+	@apply border-slate-500 bg-white;
+}
+.classeCard4Label {
+	@apply text-black;
+}
+.classeCard4Titulo {
+	@apply text-black;
+}

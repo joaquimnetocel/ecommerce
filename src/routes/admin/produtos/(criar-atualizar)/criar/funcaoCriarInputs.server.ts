@@ -16,7 +16,7 @@ export function funcaoCriarInputs(): typeSchemaInput {
 			campoEstoque: 1,
 			campoPreco: '0.00',
 			idVariantes: undefined,
-			campoAtributos: {},
+			campoAtributos: { '': '' },
 		},
 	];
 	return {

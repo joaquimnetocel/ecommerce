@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Collapsible from '$lib/componentes/baseadosEmShadcn/Collapsible.svelte';
 	import { Button } from '$lib/shadcn/componentes/ui/button';
 	import {
 		Card,
@@ -12,6 +11,8 @@
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { slide } from 'svelte/transition';
+	import CollapsibleDaVariante from './CollapsibleDaVariante.svelte';
+	import FormularioDeAtributos from './FormularioDeAtributos.svelte';
 	import type { typeDados } from './typeDados';
 
 	let { dados }: { dados: typeDados } = $props();
@@ -35,12 +36,12 @@
 	);
 </script>
 
-<Card class=" bg-slate-700 shadow-md">
+<Card class=" classeCard2">
 	<CardHeader>
 		<div class="flex items-center justify-between">
 			<div>
-				<CardTitle class="text-2xl font-semibold text-white">VARIANTES</CardTitle>
-				<CardDescription class="text-white">
+				<CardTitle class="classeCard2Titulo">VARIANTES</CardTitle>
+				<CardDescription class="classeCard2Descricao">
 					Cada variante possui SKU, preço, estoque e atributos próprios.
 				</CardDescription>
 			</div>
@@ -64,10 +65,10 @@
 		</div>
 	</CardHeader>
 
-	<CardContent class="space-y-3">
+	<CardContent class="space-y-3 ">
 		{#each variantesRenderizadas as corrente (corrente.estado.id)}
 			<div transition:slide>
-				<Collapsible bind:open={corrente.estado.open}>
+				<CollapsibleDaVariante bind:open={corrente.estado.open}>
 					{#snippet trigger()}
 						<div class="flex w-full items-center justify-between">
 							<div>
@@ -107,13 +108,13 @@
 									<Label>PREÇO</Label>
 									<Input
 										autocomplete="off"
-										class="bg-white"
+										class="classeCard2Input"
 										type="string"
 										step="0.01"
 										bind:value={corrente.variante.campoPreco}
 									/>
 									{#if dados.erros.formVariantes?.[corrente.contadorOriginal]?.campoPreco !== undefined}
-										<div class="text-sm text-red-400">
+										<div class="classeCard2Erro">
 											{dados.erros.formVariantes?.[corrente.contadorOriginal]?.campoPreco}
 										</div>
 									{/if}
@@ -126,7 +127,7 @@
 										bind:value={corrente.variante.campoEstoque}
 										type="number"
 										name="campoEstoque"
-										class="bg-white"
+										class="classeCard2Input"
 									/>
 								</div>
 							</div>
@@ -134,45 +135,20 @@
 							<div class="flex items-center gap-3">
 								<Label>
 									<Checkbox
-										class="border-slate-400 bg-white data-[state=checked]:bg-sky-500"
+										class="classeCard2Checkbox"
 										bind:checked={corrente.variante.campoAtivo}
 									/>
 									{corrente.variante.campoAtivo ? 'VARIANTE ATIVA' : 'VARIANTE INATIVA'}
 								</Label>
 							</div>
 
-							<Card class=" border-4 border-slate-700 bg-slate-300 shadow-md">
-								<CardHeader>
-									<div class="flex items-center justify-between">
-										<div>
-											<CardTitle>ATRIBUTOS</CardTitle>
-											<!-- <p class="text-white">
-												Cada variante possui SKU, preço, estoque e atributos próprios.
-											</p> -->
-										</div>
-
-										<Button type="button" variant="outline">ADICIONAR ATRIBUTO</Button>
-									</div>
-								</CardHeader>
-								<CardContent>
-									<div class="grid gap-4 space-y-4 md:grid-cols-2">
-										<div class="space-y-2">
-											<Label for="atributo-1-nome">Nome do atributo</Label>
-
-											<Input id="atributo-1-nome" placeholder="COR" class="bg-white" />
-										</div>
-
-										<div class="space-y-2">
-											<Label for="atributo-1-valor">Valor</Label>
-
-											<Input id="atributo-1-valor" placeholder="AZUL" class="bg-white" />
-										</div>
-									</div>
-								</CardContent>
-							</Card>
+							<!-- NECESSÁRIO O KEY PARA RECRIAR O ESTADO INTERNO DO COMPONENTE -->
+							{#key corrente.estado.id}
+								<FormularioDeAtributos bind:campoAtributos={corrente.variante.campoAtributos} />
+							{/key}
 						</div>
 					{/snippet}
-				</Collapsible>
+				</CollapsibleDaVariante>
 			</div>
 		{/each}
 	</CardContent>

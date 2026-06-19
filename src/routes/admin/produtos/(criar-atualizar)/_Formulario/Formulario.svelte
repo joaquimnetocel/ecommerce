@@ -7,8 +7,8 @@
 
 	let { data }: { data: typeDados } = $props();
 
-	// svelte-ignore state_referenced_locally
-	let dados = $state(structuredClone(data)); // EXIGE O {#key} NO COMPONENTE PARA RE-CÁLCULO
+	// svelte-ignore state_referenced_locally (NÃO TEM PROBLEMA POIS COMPONENTE ESTÁ ENVOLVIDO POR {#key})
+	let dados = $state(structuredClone(data));
 
 	const operacao = $derived(
 		dados.inputs.formProdutos.idProdutos === undefined ? 'enumCriar' : 'enumAtualizar',
@@ -30,9 +30,9 @@
 	>
 {/snippet}
 
-<form class="space-y-6">
+<div class="space-y-6">
 	<div class="flex items-center justify-between">
-		<h1 class="text-2xl font-semibold">
+		<h1 class="classeTitulo">
 			{operacao === 'enumCriar' ? 'CRIAR' : 'ATUALIZAR'} PRODUTO
 		</h1>
 		<div>
@@ -40,7 +40,7 @@
 		</div>
 	</div>
 	<FormularioDeProdutos {dados} />
-	<div class="flex justify-end gap-3 border-t pt-6">
+	<div class="flex justify-end gap-3">
 		{@render snippetBotoes()}
 	</div>
-</form>
+</div>

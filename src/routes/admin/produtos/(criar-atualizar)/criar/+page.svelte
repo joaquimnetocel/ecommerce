@@ -5,4 +5,6 @@
 	const { data }: PageProps = $props();
 </script>
 
-<Formulario {data} />
+{#key data.inputs.formProdutos.idProdutos}
+	<Formulario {data} />
+{/key}

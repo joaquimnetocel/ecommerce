@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Sidebar from '$lib/shadcn/componentes/ui/sidebar/index.js';
 	import Menu from './_Menu/Menu.svelte';
+	import './_css/formularios.css';
 
 	let { children } = $props();
 </script>
