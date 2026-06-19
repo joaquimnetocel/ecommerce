@@ -3,6 +3,7 @@
 	import CategoriaTree from './CategoriaTree.svelte';
 	import { constCategorias } from './constCategorias';
 	import { funcaoMontarArvore } from './funcaoMontarArvore';
+	import { funcaoPegarTodosDescendentes } from './funcaoPegarTodosDescendentes';
 	import type { typeCategoriaArvore } from './typeCategoriaArvore';
 
 	let categorias = funcaoMontarArvore(constCategorias);
@@ -38,18 +39,8 @@
 
 		atualizarPais(pai);
 	}
-	function pegarTodosDescendentes(no: typeCategoriaArvore): string[] {
-		const ids: string[] = [];
 
-		for (const filho of no.filhas) {
-			ids.push(filho.idCategorias);
-			ids.push(...pegarTodosDescendentes(filho));
-		}
-
-		return ids;
-	}
-
-	function toggle(id: string) {
+	function funcaoToggle(id: string) {
 		const no = mapa.get(id);
 		if (!no) return;
 
@@ -61,7 +52,7 @@
 		if (estaMarcado) {
 			selecionadas.delete(id);
 
-			const descendentes = pegarTodosDescendentes(no);
+			const descendentes = funcaoPegarTodosDescendentes(no);
 			for (const i of descendentes) {
 				selecionadas.delete(i);
 			}
@@ -84,7 +75,7 @@
 <form class="space-y-4">
 	<ul>
 		{#each categorias as categoria (categoria.idCategorias)}
-			<CategoriaTree {categoria} nivel={0} {selecionadas} {toggle} />
+			<CategoriaTree {categoria} nivel={0} {selecionadas} {funcaoToggle} />
 		{/each}
 	</ul>
 

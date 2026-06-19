@@ -7,12 +7,12 @@
 		categoria,
 		nivel = 0,
 		selecionadas,
-		toggle,
+		funcaoToggle,
 	} = $props<{
 		categoria: typeCategoriaArvore;
 		nivel?: number;
 		selecionadas: SvelteSet<string>;
-		toggle: (id: string) => void;
+		funcaoToggle: (id: string) => void;
 	}>();
 
 	let aberto = $state(true);
@@ -32,7 +32,7 @@
 			<input
 				type="checkbox"
 				checked={selecionadas.has(categoria.idCategorias)}
-				onchange={() => toggle(categoria.idCategorias)}
+				onchange={() => funcaoToggle(categoria.idCategorias)}
 			/>
 
 			<span>{categoria.campoNome}</span>
@@ -42,7 +42,7 @@
 	{#if aberto && categoria.filhas.length}
 		<ul>
 			{#each categoria.filhas as filha (filha.idCategorias)}
-				<CategoriaTree categoria={filha} nivel={nivel + 1} {selecionadas} {toggle} />
+				<CategoriaTree categoria={filha} nivel={nivel + 1} {selecionadas} {funcaoToggle} />
 			{/each}
 		</ul>
 	{/if}
