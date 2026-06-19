@@ -4,7 +4,7 @@ import { tabelaCategorias } from './tabela';
 
 export const relacoesCategorias = relations(tabelaCategorias, ({ one, many }) => ({
 	pai: one(tabelaCategorias, {
-		fields: [tabelaCategorias.keyCategorias],
+		fields: [tabelaCategorias.keyCategoriasPai],
 		references: [tabelaCategorias.idCategorias],
 	}),
 	filhas: many(tabelaCategorias),

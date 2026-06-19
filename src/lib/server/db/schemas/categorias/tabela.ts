@@ -5,5 +5,5 @@ export const tabelaCategorias = pgTable('tabelaCategorias', {
 	idCategorias: uuid().primaryKey(),
 	campoNome: varchar({ length: 255 }).notNull(),
 	campoSlug: varchar({ length: 255 }).unique().notNull(),
-	keyCategorias: uuid().references((): AnyPgColumn => tabelaCategorias.idCategorias),
+	keyCategoriasPai: uuid().references((): AnyPgColumn => tabelaCategorias.idCategorias),
 });
