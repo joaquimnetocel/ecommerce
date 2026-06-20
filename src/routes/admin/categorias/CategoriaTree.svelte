@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { Button } from '$lib/shadcn/componentes/ui/button';
+	import { Input } from '$lib/shadcn/componentes/ui/input';
+	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import type { SvelteSet } from 'svelte/reactivity';
 	import CategoriaTree from './CategoriaTree.svelte';
-	import type { typeCategoriaArvore } from './typeCategoriaArvore';
+	import type { typeGalho } from './typeGalho';
 
 	let {
 		categoria,
@@ -9,99 +12,113 @@
 		selecionadas,
 		funcaoToggle,
 		criandoEm,
-		iniciarCriacao,
-		salvarSubcategoria,
-		cancelarCriacao,
-		getInput,
-		setInput,
+		funcaoIniciarCriacao,
+		funcaoSalvarSubcategoria,
+		funcaoCancelarCriacao,
+		funcaoGetInput,
+		funcaoSetInput,
 	} = $props<{
-		categoria: typeCategoriaArvore;
+		categoria: typeGalho;
 		nivel?: number;
 		selecionadas: SvelteSet<string>;
 		funcaoToggle: (id: string) => void;
 		criandoEm: string | null;
-		iniciarCriacao: (idPai: string) => void;
-		salvarSubcategoria: (idPai: string) => void;
-		cancelarCriacao: () => void;
-		getInput: (id: string) => string;
-		setInput: (id: string, value: string) => void;
+		funcaoIniciarCriacao: (idPai: string) => void;
+		funcaoSalvarSubcategoria: (idPai: string) => void;
+		funcaoCancelarCriacao: () => void;
+		funcaoGetInput: (id: string) => string;
+		funcaoSetInput: (id: string, value: string) => void;
 	}>();
 
 	let aberto = $state(true);
 
-	// const indent = (nivel: number) => `padding-left:${nivel * 24}px`;
-	const indent = (nivel: number) => nivel * 24;
+	const funcaoIdentar = (nivel: number) => nivel * 24;
 	const editOffset = 48;
 </script>
 
 <li>
 	<!-- HEADER DA CATEGORIA -->
-	<div class="flex items-center gap-2" style={`padding-left:${indent(nivel)}px`}>
+	<div class="flex items-center gap-2" style={`padding-left:${funcaoIdentar(nivel)}px`}>
 		{#if categoria.filhas.length}
-			<button type="button" class="w-5" onclick={() => (aberto = !aberto)}>
+			<button
+				type="button"
+				class="classeCard2Label w-5 cursor-pointer"
+				onclick={() => (aberto = !aberto)}
+			>
 				{aberto ? '▼' : '▶'}
 			</button>
 		{:else}
 			<div class="w-5"></div>
 		{/if}
 
-		<label class="flex cursor-pointer items-center gap-2">
+		<Label class="classeCard2Label flex cursor-pointer items-center gap-2">
 			<input
+				class="cursor-pointer"
 				type="checkbox"
-				checked={selecionadas.has(categoria.idCategorias)}
-				onchange={() => funcaoToggle(categoria.idCategorias)}
+				checked={selecionadas.has(categoria.identificador)}
+				onchange={() => funcaoToggle(categoria.identificador)}
 			/>
 			<span>{categoria.campoNome}</span>
-		</label>
+		</Label>
 
-		<button
-			type="button"
-			class="rounded border px-2 py-1 text-xs"
-			onclick={() => iniciarCriacao(categoria.idCategorias)}
+		<Button
+			size="xs"
+			class="cursor-pointer rounded border px-2 py-1 text-xs"
+			onclick={() => funcaoIniciarCriacao(categoria.identificador)}
 		>
-			+ Subcategoria
-		</button>
+			+ SUBCATEGORIA
+		</Button>
 	</div>
 
 	<!-- INPUT ALINHADO CORRETAMENTE -->
-	{#if criandoEm === categoria.idCategorias}
-		<div class="flex items-center gap-2" style={`padding-left:${indent(nivel) + editOffset}px`}>
-			<input
-				class="rounded border px-2 py-1 text-sm"
-				value={getInput(categoria.idCategorias)}
-				oninput={(e) => setInput(categoria.idCategorias, (e.target as HTMLInputElement).value)}
+	{#if criandoEm === categoria.identificador}
+		<div
+			class="flex items-center gap-2"
+			style={`padding-left:${funcaoIdentar(nivel) + editOffset}px`}
+		>
+			<Input
+				class="classeCard2Input w-90 rounded border px-2 py-1 text-sm"
+				// 				oninput={(e) => {
+				// }}
+
+				value={funcaoGetInput(categoria.identificador)}
+				oninput={(e) => {
+					funcaoSetInput(
+						categoria.identificador,
+						(e.target as HTMLInputElement).value.toUpperCase(),
+					);
+				}}
 				onkeydown={(e) => {
-					if (e.key === 'Enter') salvarSubcategoria(categoria.idCategorias);
-					if (e.key === 'Escape') cancelarCriacao();
+					if (e.key === 'Enter') funcaoSalvarSubcategoria(categoria.identificador);
+					if (e.key === 'Escape') funcaoCancelarCriacao();
 				}}
 				autofocus
 			/>
 
-			<button
-				type="button"
-				class="rounded border px-2 py-1 text-xs"
-				onclick={() => salvarSubcategoria(categoria.idCategorias)}
+			<Button
+				class="cursor-pointer rounded border px-2 py-1 text-xs"
+				onclick={() => funcaoSalvarSubcategoria(categoria.identificador)}
 			>
-				OK
-			</button>
+				CRIAR
+			</Button>
 		</div>
 	{/if}
 
 	<!-- FILHOS -->
 	{#if aberto && categoria.filhas.length}
 		<ul>
-			{#each categoria.filhas as filha (filha.idCategorias)}
+			{#each categoria.filhas as filha (filha.identificador)}
 				<CategoriaTree
 					categoria={filha}
 					nivel={nivel + 1}
 					{selecionadas}
 					{funcaoToggle}
 					{criandoEm}
-					{iniciarCriacao}
-					{salvarSubcategoria}
-					{cancelarCriacao}
-					{getInput}
-					{setInput}
+					{funcaoIniciarCriacao}
+					{funcaoSalvarSubcategoria}
+					{funcaoCancelarCriacao}
+					{funcaoGetInput}
+					{funcaoSetInput}
 				/>
 			{/each}
 		</ul>

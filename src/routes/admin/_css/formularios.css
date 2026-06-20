@@ -4,7 +4,7 @@
 	@apply text-2xl font-semibold;
 }
 .classeCard1 {
-	@apply border-slate-700 bg-slate-800 shadow-lg shadow-md;
+	@apply border-slate-700 bg-slate-800 shadow-lg;
 }
 .classeCard1Titulo {
 	@apply text-2xl font-semibold text-white;
@@ -26,6 +26,9 @@
 }
 .classeCard2Titulo {
 	@apply text-2xl font-semibold text-white;
+}
+.classeCard2Label {
+	@apply text-white;
 }
 .classeCard2Descricao {
 	@apply text-white;

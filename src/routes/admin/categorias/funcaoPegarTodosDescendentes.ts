@@ -1,4 +1,4 @@
-import type { typeCategoriaArvore } from './typeCategoriaArvore';
+import type { typeCategoriaArvore } from './typeGalho';
 
 export function funcaoPegarTodosDescendentes(no: typeCategoriaArvore): string[] {
 	const ids: string[] = [];

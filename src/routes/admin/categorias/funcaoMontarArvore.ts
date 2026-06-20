@@ -1,17 +1,17 @@
-import type { typeCategoriaArvore } from './typeCategoriaArvore';
-import type { typeCategorias } from './typeCategorias';
+import type { typeSchemaInput } from './schema';
+import type { typeGalho } from './typeGalho';
 
-export function funcaoMontarArvore(categorias: typeCategorias[]): typeCategoriaArvore[] {
-	const mapa = new Map<string, typeCategoriaArvore>();
+export function funcaoMontarArvore(categorias: typeSchemaInput[]): typeGalho[] {
+	const mapa = new Map<string, typeGalho>();
 
 	for (const categoria of categorias) {
-		mapa.set(categoria.idCategorias, {
+		mapa.set(categoria.identificador, {
 			...categoria,
 			filhas: [],
 		});
 	}
 
-	const raizes: typeCategoriaArvore[] = [];
+	const raizes: typeGalho[] = [];
 
 	for (const categoria of mapa.values()) {
 		if (!categoria.keyCategoriasPai) {

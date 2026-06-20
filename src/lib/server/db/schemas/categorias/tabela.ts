@@ -2,7 +2,7 @@ import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const tabelaCategorias = pgTable('tabelaCategorias', {
-	idCategorias: uuid().primaryKey(),
+	idCategorias: uuid().defaultRandom().primaryKey(),
 	campoNome: varchar({ length: 255 }).notNull(),
 	campoSlug: varchar({ length: 255 }).unique().notNull(),
 	keyCategoriasPai: uuid().references((): AnyPgColumn => tabelaCategorias.idCategorias),

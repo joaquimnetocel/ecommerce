@@ -4,7 +4,7 @@ import * as v from 'valibot';
 
 export const schema = v.object({
 	formProdutos: v.object({
-		idProdutos: v.optional(v.string()),
+		idProdutos: v.optional(v.pipe(v.string(), v.uuid('ID DO PRODUTO INVÁLIDO.'))),
 		campoNome: v.pipe(
 			v.string(),
 			v.trim(),
@@ -30,7 +30,7 @@ export const schema = v.object({
 	formVariantes: v.pipe(
 		v.array(
 			v.object({
-				idVariantes: v.optional(v.string()),
+				idVariantes: v.optional(v.pipe(v.string(), v.uuid('ID DA VARIANTE INVÁLIDO.'))),
 				campoPreco: v.pipe(
 					v.string(),
 					v.trim(),

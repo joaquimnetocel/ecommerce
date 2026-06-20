@@ -1,97 +1,105 @@
 <script lang="ts">
+	import { Button } from '$lib/shadcn/componentes/ui/button';
+	import {
+		Card,
+		CardContent,
+		// CardDescription,
+		CardHeader,
+		CardTitle,
+	} from '$lib/shadcn/componentes/ui/card';
+	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+	import type { PageProps } from './$types';
 	import CategoriaTree from './CategoriaTree.svelte';
-	import { constCategorias } from './constCategorias';
 	import { funcaoMontarArvore } from './funcaoMontarArvore';
 	import { funcaoPegarTodosDescendentes } from './funcaoPegarTodosDescendentes';
-	import type { typeCategoriaArvore } from './typeCategoriaArvore';
+	import { remotaCriarCategoria } from './remotas/remotaCriarCategoria.remote';
+	import type { typeSchemaInput } from './schema';
+	import { sweetalertCriarCategoria } from './sweetalertCriarCategoria';
+	import type { typeGalho } from './typeGalho';
 
-	let categorias = $state(funcaoMontarArvore(constCategorias));
-	let selecionadas = new SvelteSet<string>();
+	let { data }: PageProps = $props();
 
-	let query = $state('');
+	// svelte-ignore state_referenced_locally
+	const arvore = $state(funcaoMontarArvore(data.inputs));
+	const inputs = $state<Record<string, string>>({});
+	let pesquisa = $state('');
 	let criandoEm = $state<string | null>(null);
+	const selecionadas = new SvelteSet<string>();
+	const mapa = new SvelteMap<string, typeGalho>();
 
-	// ✅ REATIVO (corrige seu bug do OK)
-	let inputs = $state<Record<string, string>>({});
+	for (const galho of arvore) funcaoMapear(galho);
 
-	const mapa = new SvelteMap<string, typeCategoriaArvore>();
-
-	function indexar(no: typeCategoriaArvore) {
-		mapa.set(no.idCategorias, no);
-		for (const filho of no.filhas) indexar(filho);
+	function funcaoMapear(galho: typeGalho) {
+		mapa.set(galho.identificador, galho);
+		for (const filho of galho.filhas) funcaoMapear(filho);
 	}
 
-	for (const raiz of categorias) indexar(raiz);
-
-	// -------------------------
-	// SELEÇÃO
-	// -------------------------
-	function atualizarPais(no: typeCategoriaArvore) {
-		if (!no.keyCategoriasPai) return;
-
-		const pai = mapa.get(no.keyCategoriasPai);
-		if (!pai) return;
-
-		const algumFilhoMarcado = pai.filhas.some((f) => selecionadas.has(f.idCategorias));
-
-		if (algumFilhoMarcado) selecionadas.add(pai.idCategorias);
-		else selecionadas.delete(pai.idCategorias);
-
-		atualizarPais(pai);
+	function funcaoAtualizarPais(galho: typeGalho) {
+		if (!galho.keyCategoriasPai) return;
+		const galhoPai = mapa.get(galho.keyCategoriasPai);
+		if (!galhoPai) return;
+		const algumFilhoMarcado = galhoPai.filhas.some((par) => selecionadas.has(par.identificador));
+		if (algumFilhoMarcado) {
+			selecionadas.add(galhoPai.identificador);
+		} else {
+			selecionadas.delete(galhoPai.identificador);
+		}
+		funcaoAtualizarPais(galhoPai);
 	}
 
-	function funcaoToggle(id: string) {
-		const no = mapa.get(id);
-		if (!no) return;
-
-		const estaMarcado = selecionadas.has(id);
-
+	function funcaoToggle(identificador: string) {
+		const galho = mapa.get(identificador);
+		if (!galho) return;
+		const estaMarcado = selecionadas.has(identificador);
 		if (estaMarcado) {
-			selecionadas.delete(id);
+			selecionadas.delete(identificador);
 
-			const descendentes = funcaoPegarTodosDescendentes(no);
+			const descendentes = funcaoPegarTodosDescendentes(galho);
 			for (const i of descendentes) {
 				selecionadas.delete(i);
 			}
 		} else {
-			selecionadas.add(id);
+			selecionadas.add(identificador);
 		}
 
-		atualizarPais(no);
+		funcaoAtualizarPais(galho);
 	}
 
-	// -------------------------
-	// CRIAÇÃO
-	// -------------------------
-	function iniciarCriacao(idPai: string) {
+	function funcaoIniciarCriacao(idPai: string) {
 		criandoEm = idPai;
 		inputs[idPai] = '';
 	}
 
-	function setInput(id: string, value: string) {
+	function funcaoCancelarCriacao() {
+		if (criandoEm) delete inputs[criandoEm];
+		criandoEm = null;
+	}
+
+	function funcaoSetInput(id: string, value: string) {
 		inputs[id] = value;
 	}
 
-	function getInput(id: string) {
+	function funcaoGetInput(id: string) {
 		return inputs[id] ?? '';
 	}
 
-	function salvarSubcategoria(idPai: string) {
+	function funcaoSalvarSubcategoria(idPai: string) {
 		const nome = inputs[idPai]?.trim();
 		if (!nome) return;
 
 		const pai = mapa.get(idPai);
 		if (!pai) return;
 
-		const nova: typeCategoriaArvore = {
-			idCategorias: crypto.randomUUID(),
+		const nova: typeGalho = {
+			identificador: crypto.randomUUID(),
 			campoNome: nome,
 			keyCategoriasPai: idPai,
 			filhas: [],
+			idCategorias: undefined,
 		};
 
-		mapa.set(nova.idCategorias, nova);
+		mapa.set(nova.identificador, nova);
 		pai.filhas.unshift(nova);
 
 		// pai.filhas.sort((a, b) => a.campoNome.localeCompare(b.campoNome));
@@ -100,67 +108,98 @@
 		delete inputs[idPai];
 	}
 
-	function cancelarCriacao() {
-		if (criandoEm) delete inputs[criandoEm];
-		criandoEm = null;
-	}
-
-	// -------------------------
-	// BUSCA
-	// -------------------------
-	function filtrarArvore(no: typeCategoriaArvore, query: string): typeCategoriaArvore | null {
-		if (!query) return no;
-
-		const match = no.campoNome.toLowerCase().includes(query.toLowerCase());
-
-		const filhas = no.filhas
-			.map((f) => filtrarArvore(f, query))
-			.filter((n): n is typeCategoriaArvore => n !== null);
-
+	function filtrarArvore(galho: typeGalho, pesquisa: string): typeGalho | null {
+		if (!pesquisa) return galho;
+		const match = galho.campoNome.toLowerCase().includes(pesquisa.toLowerCase());
+		const filhas = galho.filhas
+			.map((par) => filtrarArvore(par, pesquisa))
+			.filter((par): par is typeGalho => par !== null);
 		if (match || filhas.length) {
-			return { ...no, filhas };
+			return { ...galho, filhas };
 		}
-
 		return null;
 	}
 
-	const categoriasFiltradas = $derived(
-		query
-			? categorias
-					.map((r) => filtrarArvore(r, query))
-					.filter((n): n is typeCategoriaArvore => n !== null)
-			: categorias,
+	const derivedCategoriasFiltradas = $derived(
+		pesquisa
+			? arvore
+					.map((par) => filtrarArvore(par, pesquisa))
+					.filter((par): par is typeGalho => par !== null)
+			: arvore,
 	);
 </script>
 
-<!-- SEARCH -->
-<input
-	type="text"
-	bind:value={query}
-	placeholder="Pesquisar categoria..."
-	class="w-full rounded border px-3 py-2"
-/>
+<Card class="classeCard2">
+	<CardHeader>
+		<CardTitle class="classeCard1Titulo">CATEGORIAS</CardTitle>
+		<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
+	</CardHeader>
 
-<!-- TREE -->
-<form class="space-y-4">
-	<ul>
-		{#each categoriasFiltradas as categoria (categoria.idCategorias)}
-			<CategoriaTree
-				{categoria}
-				nivel={0}
-				{selecionadas}
-				{funcaoToggle}
-				{criandoEm}
-				{iniciarCriacao}
-				{salvarSubcategoria}
-				{cancelarCriacao}
-				{getInput}
-				{setInput}
+	<CardContent class="space-y-4">
+		{#if arvore.length > 0}
+			<Input
+				bind:value={pesquisa}
+				placeholder="PESQUISAR CATEGORIA..."
+				class="classeCard2Input mb-5 w-full rounded border px-3 py-2"
 			/>
-		{/each}
-	</ul>
+		{/if}
 
-	<button type="submit" class="rounded border px-4 py-2"> Salvar </button>
-</form>
+		<form class="space-y-4">
+			<ul>
+				{#if derivedCategoriasFiltradas.length === 0}
+					<div class="space-y-4 text-center">
+						<div class="text-white">NENHUMA CATEGORIA ENCONTRADA</div>
+						{#if arvore.length === 0}
+							<div>
+								<Button class="cursor-pointer">+ CRIAR PRIMEIRA CATEGORIA</Button>
+							</div>
+						{/if}
+					</div>
+				{:else}
+					{#each derivedCategoriasFiltradas as categoria (categoria.identificador)}
+						<CategoriaTree
+							{categoria}
+							nivel={0}
+							{selecionadas}
+							{funcaoToggle}
+							{criandoEm}
+							{funcaoIniciarCriacao}
+							{funcaoSalvarSubcategoria}
+							{funcaoCancelarCriacao}
+							{funcaoGetInput}
+							{funcaoSetInput}
+						/>
+					{/each}
+				{/if}
+			</ul>
+
+			<Button class="mt-2 cursor-pointer rounded border px-4 py-2">SALVAR</Button>
+			<Button
+				onclick={async () => {
+					const nomeDaNovaCategoria = await sweetalertCriarCategoria();
+					if (nomeDaNovaCategoria === null) {
+						return;
+					}
+					const paraCriar: typeSchemaInput = {
+						identificador: '',
+						campoNome: nomeDaNovaCategoria,
+						keyCategoriasPai: null,
+						idCategorias: undefined,
+					};
+					const inserido = await remotaCriarCategoria(paraCriar);
+					const novoGalho: typeGalho = {
+						...inserido,
+						identificador: inserido.idCategorias,
+						filhas: [],
+					};
+					mapa.set(novoGalho.identificador, novoGalho);
+					arvore.unshift(novoGalho);
+				}}
+				class="cursor-pointer">+ CRIAR CATEGORIA</Button
+			>
+		</form>
+	</CardContent>
+</Card>
 
 <pre>{JSON.stringify([...selecionadas], null, 2)}</pre>
+<!-- <pre>{JSON.stringify(arvore, null, 2)}</pre> -->
