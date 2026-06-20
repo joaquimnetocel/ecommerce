@@ -14,14 +14,13 @@
 	import { funcaoMontarArvore } from './funcaoMontarArvore';
 	import { funcaoPegarTodosDescendentes } from './funcaoPegarTodosDescendentes';
 	import { remotaCriarCategoria } from './remotas/remotaCriarCategoria.remote';
-	import type { typeSchemaInput } from './schema';
 	import { sweetalertCriarCategoria } from './sweetalertCriarCategoria';
 	import type { typeGalho } from './typeGalho';
 
 	let { data }: PageProps = $props();
 
 	// svelte-ignore state_referenced_locally
-	const arvore = $state(funcaoMontarArvore(data.inputs));
+	const arvore = $state(funcaoMontarArvore(data.lido));
 	const inputs = $state<Record<string, string>>({});
 	let pesquisa = $state('');
 	let criandoEm = $state<string | null>(null);
@@ -31,7 +30,7 @@
 	for (const galho of arvore) funcaoMapear(galho);
 
 	function funcaoMapear(galho: typeGalho) {
-		mapa.set(galho.identificador, galho);
+		mapa.set(galho.idCategorias, galho);
 		for (const filho of galho.filhas) funcaoMapear(filho);
 	}
 
@@ -39,28 +38,28 @@
 		if (!galho.keyCategoriasPai) return;
 		const galhoPai = mapa.get(galho.keyCategoriasPai);
 		if (!galhoPai) return;
-		const algumFilhoMarcado = galhoPai.filhas.some((par) => selecionadas.has(par.identificador));
+		const algumFilhoMarcado = galhoPai.filhas.some((par) => selecionadas.has(par.idCategorias));
 		if (algumFilhoMarcado) {
-			selecionadas.add(galhoPai.identificador);
+			selecionadas.add(galhoPai.idCategorias);
 		} else {
-			selecionadas.delete(galhoPai.identificador);
+			selecionadas.delete(galhoPai.idCategorias);
 		}
 		funcaoAtualizarPais(galhoPai);
 	}
 
-	function funcaoToggle(identificador: string) {
-		const galho = mapa.get(identificador);
+	function funcaoToggle(parId: string) {
+		const galho = mapa.get(parId);
 		if (!galho) return;
-		const estaMarcado = selecionadas.has(identificador);
+		const estaMarcado = selecionadas.has(parId);
 		if (estaMarcado) {
-			selecionadas.delete(identificador);
+			selecionadas.delete(parId);
 
 			const descendentes = funcaoPegarTodosDescendentes(galho);
 			for (const i of descendentes) {
 				selecionadas.delete(i);
 			}
 		} else {
-			selecionadas.add(identificador);
+			selecionadas.add(parId);
 		}
 
 		funcaoAtualizarPais(galho);
@@ -87,23 +86,18 @@
 	async function funcaoSalvarSubcategoria(idPai: string) {
 		const nomeDaNovaCategoria = inputs[idPai]?.trim();
 		if (!nomeDaNovaCategoria) return;
-
 		const pai = mapa.get(idPai);
 		if (!pai) return;
-
-		const paraCriar: typeSchemaInput = {
-			identificador: '',
+		const inserido = await remotaCriarCategoria({
 			campoNome: nomeDaNovaCategoria,
 			keyCategoriasPai: idPai,
 			idCategorias: undefined,
-		};
-		const inserido = await remotaCriarCategoria(paraCriar);
+		});
 		const novoGalho: typeGalho = {
 			...inserido,
-			identificador: inserido.idCategorias,
 			filhas: [],
 		};
-		mapa.set(novoGalho.identificador, novoGalho);
+		mapa.set(novoGalho.idCategorias, novoGalho);
 		pai.filhas.unshift(novoGalho);
 
 		// pai.filhas.sort((a, b) => a.campoNome.localeCompare(b.campoNome));
@@ -160,7 +154,7 @@
 						{/if}
 					</div>
 				{:else}
-					{#each derivedCategoriasFiltradas as categoria (categoria.identificador)}
+					{#each derivedCategoriasFiltradas as categoria (categoria.idCategorias)}
 						<CategoriaTree
 							{categoria}
 							nivel={0}
@@ -184,19 +178,16 @@
 					if (nomeDaNovaCategoria === null) {
 						return;
 					}
-					const paraCriar: typeSchemaInput = {
-						identificador: '',
+					const inserido = await remotaCriarCategoria({
 						campoNome: nomeDaNovaCategoria,
 						keyCategoriasPai: null,
 						idCategorias: undefined,
-					};
-					const inserido = await remotaCriarCategoria(paraCriar);
+					});
 					const novoGalho: typeGalho = {
 						...inserido,
-						identificador: inserido.idCategorias,
 						filhas: [],
 					};
-					mapa.set(novoGalho.identificador, novoGalho);
+					mapa.set(novoGalho.idCategorias, novoGalho);
 					arvore.unshift(novoGalho);
 				}}
 				class="cursor-pointer">+ CRIAR CATEGORIA</Button

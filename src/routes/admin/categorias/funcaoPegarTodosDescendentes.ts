@@ -1,6 +1,6 @@
-import type { typeCategoriaArvore } from './typeGalho';
+import type { typeGalho } from './typeGalho';
 
-export function funcaoPegarTodosDescendentes(no: typeCategoriaArvore): string[] {
+export function funcaoPegarTodosDescendentes(no: typeGalho): string[] {
 	const ids: string[] = [];
 
 	for (const filho of no.filhas) {

@@ -55,8 +55,8 @@
 			<input
 				class="cursor-pointer"
 				type="checkbox"
-				checked={selecionadas.has(categoria.identificador)}
-				onchange={() => funcaoToggle(categoria.identificador)}
+				checked={selecionadas.has(categoria.idCategorias)}
+				onchange={() => funcaoToggle(categoria.idCategorias)}
 			/>
 			<span>{categoria.campoNome}</span>
 		</Label>
@@ -64,14 +64,14 @@
 		<Button
 			size="xs"
 			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => funcaoIniciarCriacao(categoria.identificador)}
+			onclick={() => funcaoIniciarCriacao(categoria.idChamadas)}
 		>
 			+ SUBCATEGORIA
 		</Button>
 	</div>
 
 	<!-- INPUT ALINHADO CORRETAMENTE -->
-	{#if criandoEm === categoria.identificador}
+	{#if criandoEm === categoria.idChamadas}
 		<div
 			class="flex items-center gap-2"
 			style={`padding-left:${funcaoIdentar(nivel) + editOffset}px`}
@@ -81,15 +81,12 @@
 				// 				oninput={(e) => {
 				// }}
 
-				value={funcaoGetInput(categoria.identificador)}
+				value={funcaoGetInput(categoria.idChamadas)}
 				oninput={(e) => {
-					funcaoSetInput(
-						categoria.identificador,
-						(e.target as HTMLInputElement).value.toUpperCase(),
-					);
+					funcaoSetInput(categoria.idChamadas, (e.target as HTMLInputElement).value.toUpperCase());
 				}}
 				onkeydown={(e) => {
-					if (e.key === 'Enter') funcaoSalvarSubcategoria(categoria.identificador);
+					if (e.key === 'Enter') funcaoSalvarSubcategoria(categoria.idChamadas);
 					if (e.key === 'Escape') funcaoCancelarCriacao();
 				}}
 				autofocus
@@ -97,7 +94,7 @@
 
 			<Button
 				class="cursor-pointer rounded border px-2 py-1 text-xs"
-				onclick={() => funcaoSalvarSubcategoria(categoria.identificador)}
+				onclick={() => funcaoSalvarSubcategoria(categoria.idChamadas)}
 			>
 				CRIAR
 			</Button>
@@ -107,7 +104,7 @@
 	<!-- FILHOS -->
 	{#if aberto && categoria.filhas.length}
 		<ul>
-			{#each categoria.filhas as filha (filha.identificador)}
+			{#each categoria.filhas as filha (filha.idChamadas)}
 				<CategoriaTree
 					categoria={filha}
 					nivel={nivel + 1}

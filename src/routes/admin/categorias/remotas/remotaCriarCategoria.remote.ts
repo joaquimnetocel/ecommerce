@@ -5,10 +5,9 @@ import { tabelaCategorias } from '$lib/server/db/schema';
 import { schema, type typeSchemaInput } from '../schema';
 
 export const remotaCriarCategoria = command(schema, async (dados) => {
-	const { identificador, ...dadosSemIdentificador } = dados;
 	const insercao = {
-		...dadosSemIdentificador,
-		campoSlug: funcaoGerarSlug(dadosSemIdentificador.campoNome),
+		...dados,
+		campoSlug: funcaoGerarSlug(dados.campoNome),
 	};
 	const [inserido] = await db.insert(tabelaCategorias).values(insercao).returning();
 	// const retorno: typeSchemaInput = {

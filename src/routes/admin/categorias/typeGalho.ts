@@ -1,5 +1,6 @@
-import type { typeSchemaInput } from './schema';
-
-export type typeGalho = typeSchemaInput & {
+export type typeGalho = {
+	idCategorias: string;
+	campoNome: string;
+	keyCategoriasPai: string | null;
 	filhas: typeGalho[];
 };

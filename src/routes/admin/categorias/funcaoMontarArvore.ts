@@ -1,11 +1,11 @@
-import type { typeSchemaInput } from './schema';
 import type { typeGalho } from './typeGalho';
+import type { typeLido } from './typeLido';
 
-export function funcaoMontarArvore(categorias: typeSchemaInput[]): typeGalho[] {
+export function funcaoMontarArvore(categorias: typeLido): typeGalho[] {
 	const mapa = new Map<string, typeGalho>();
 
 	for (const categoria of categorias) {
-		mapa.set(categoria.identificador, {
+		mapa.set(categoria.idCategorias, {
 			...categoria,
 			filhas: [],
 		});
