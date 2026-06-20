@@ -84,23 +84,27 @@
 		return inputs[id] ?? '';
 	}
 
-	function funcaoSalvarSubcategoria(idPai: string) {
-		const nome = inputs[idPai]?.trim();
-		if (!nome) return;
+	async function funcaoSalvarSubcategoria(idPai: string) {
+		const nomeDaNovaCategoria = inputs[idPai]?.trim();
+		if (!nomeDaNovaCategoria) return;
 
 		const pai = mapa.get(idPai);
 		if (!pai) return;
 
-		const nova: typeGalho = {
-			identificador: crypto.randomUUID(),
-			campoNome: nome,
+		const paraCriar: typeSchemaInput = {
+			identificador: '',
+			campoNome: nomeDaNovaCategoria,
 			keyCategoriasPai: idPai,
-			filhas: [],
 			idCategorias: undefined,
 		};
-
-		mapa.set(nova.identificador, nova);
-		pai.filhas.unshift(nova);
+		const inserido = await remotaCriarCategoria(paraCriar);
+		const novoGalho: typeGalho = {
+			...inserido,
+			identificador: inserido.idCategorias,
+			filhas: [],
+		};
+		mapa.set(novoGalho.identificador, novoGalho);
+		pai.filhas.unshift(novoGalho);
 
 		// pai.filhas.sort((a, b) => a.campoNome.localeCompare(b.campoNome));
 
@@ -173,7 +177,7 @@
 				{/if}
 			</ul>
 
-			<Button class="mt-2 cursor-pointer rounded border px-4 py-2">SALVAR</Button>
+			<!-- <Button class="mt-2 cursor-pointer rounded border px-4 py-2">SALVAR</Button> -->
 			<Button
 				onclick={async () => {
 					const nomeDaNovaCategoria = await sweetalertCriarCategoria();
