@@ -13,33 +13,18 @@
 
 	let { dados }: { dados: typeCategorias } = $props();
 
-	// =========================
-	// UI STATE
-	// =========================
+	// eslint-disable-next-line svelte/prefer-writable-derived
+	let categorias = $state<typeCategorias>([]);
 	const inputs = $state<Record<string, string>>({});
 	let pesquisa = $state('');
 	let criandoEm = $state<string | null>(null);
 	const selecionadas = new SvelteSet<string>();
 
-	// =========================
-	// STATE BASE (FLAT - BANCO)
-	// =========================
-	// svelte-ignore state_referenced_locally
-	// eslint-disable-next-line svelte/prefer-writable-derived
-	let categorias = $state(structuredClone(dados));
-
 	$effect(() => {
 		categorias = structuredClone(dados);
 	});
 
-	// =========================
-	// ÁRVORE DERIVADA
-	// =========================
 	const derivedArvore = $derived(() => funcaoMontarArvore(categorias));
-
-	// =========================
-	// MAPA DERIVADO
-	// =========================
 	const derivedMapa = $derived(() => {
 		const mapa = new SvelteMap<string, typeGalho>();
 		function funcaoMapear(galho: typeGalho) {
@@ -50,16 +35,10 @@
 		return mapa;
 	});
 
-	// =========================
-	// HELPERS FLAT
-	// =========================
 	function recursivaColetarIdsDosFilhos(galho: typeGalho): string[] {
 		return [galho.idCategorias, ...galho.filhos.flatMap(recursivaColetarIdsDosFilhos)];
 	}
 
-	// =========================
-	// CHECKBOX
-	// =========================
 	function recursivaAtualizarPais(galho: typeGalho) {
 		if (!galho.keyCategoriasPai) return;
 		const pai = derivedMapa().get(galho.keyCategoriasPai);
@@ -88,14 +67,11 @@
 		recursivaAtualizarPais(galho);
 	}
 
-	// =========================
-	// INPUTS
-	// =========================
-	function funcaoSetInput(id: string, value: string) {
+	function funcaoDefinirInput(id: string, value: string) {
 		inputs[id] = value;
 	}
 
-	function funcaoGetInput(id: string) {
+	function funcaoPegarInput(id: string) {
 		return inputs[id] ?? '';
 	}
 
@@ -109,29 +85,18 @@
 		criandoEm = null;
 	}
 
-	// =========================
-	// CRIAR
-	// =========================
 	async function funcaoCriarSubcategoria(idPai: string) {
 		const nome = inputs[idPai]?.trim();
 		if (!nome) return;
-
 		const inserido = await remotaCriarCategoria({
 			campoNome: nome,
 			keyCategoriasPai: idPai,
 			idCategorias: undefined,
 		});
-
-		// FLAT UPDATE
 		categorias = [inserido, ...categorias];
-
 		criandoEm = null;
 		delete inputs[idPai];
 	}
-
-	// =========================
-	// APAGAR
-	// =========================
 
 	async function funcaoApagar(galho: typeGalho) {
 		const apagado = await remotaApagar({
@@ -145,14 +110,11 @@
 		}
 	}
 
-	// =========================
-	// FILTRO
-	// =========================
-	function filtrar(galho: typeGalho, texto: string): typeGalho | null {
+	function funcaoPesquisar(galho: typeGalho, texto: string): typeGalho | null {
 		if (!texto) return galho;
 		const match = galho.campoNome.toLowerCase().includes(texto.toLowerCase());
 		const filhos = galho.filhos
-			.map((f) => filtrar(f, texto))
+			.map((f) => funcaoPesquisar(f, texto))
 			.filter((v): v is typeGalho => v !== null);
 		if (match || filhos.length) {
 			return { ...galho, filhos: filhos };
@@ -163,7 +125,9 @@
 	const derivedArvoreFiltrada = $derived(() => {
 		const a = derivedArvore();
 		if (!pesquisa) return a;
-		return a.map((aux) => filtrar(aux, pesquisa)).filter((aux): aux is typeGalho => aux !== null);
+		return a
+			.map((aux) => funcaoPesquisar(aux, pesquisa))
+			.filter((aux): aux is typeGalho => aux !== null);
 	});
 </script>
 
@@ -187,8 +151,8 @@
 					{funcaoCriarSubcategoria}
 					{funcaoApagar}
 					{funcaoCancelarCriacao}
-					{funcaoGetInput}
-					{funcaoSetInput}
+					{funcaoPegarInput}
+					{funcaoDefinirInput}
 				/>
 			{/each}
 		{/if}

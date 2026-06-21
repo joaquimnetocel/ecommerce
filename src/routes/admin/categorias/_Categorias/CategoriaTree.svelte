@@ -15,8 +15,8 @@
 		funcaoIniciarCriacao,
 		funcaoCriarSubcategoria,
 		funcaoCancelarCriacao,
-		funcaoGetInput,
-		funcaoSetInput,
+		funcaoPegarInput,
+		funcaoDefinirInput,
 		funcaoApagar,
 	}: {
 		galho: typeGalho;
@@ -28,8 +28,8 @@
 		funcaoCriarSubcategoria: (idPai: string) => Promise<void>;
 		funcaoApagar: (id: typeGalho) => Promise<void>;
 		funcaoCancelarCriacao: () => void;
-		funcaoGetInput: (id: string) => string;
-		funcaoSetInput: (id: string, value: string) => void;
+		funcaoPegarInput: (id: string) => string;
+		funcaoDefinirInput: (id: string, value: string) => void;
 	} = $props();
 
 	let aberto = $state(true);
@@ -42,18 +42,14 @@
 	<!-- HEADER DA CATEGORIA -->
 	<div class="flex items-center gap-2" style={`padding-left:${funcaoIdentar(nivel)}px`}>
 		{#if galho.filhos.length}
-			<button
-				type="button"
-				class="classeCard2Label w-5 cursor-pointer"
-				onclick={() => (aberto = !aberto)}
-			>
+			<button type="button" class="w-5 cursor-pointer" onclick={() => (aberto = !aberto)}>
 				{aberto ? '▼' : '▶'}
 			</button>
 		{:else}
 			<div class="w-5"></div>
 		{/if}
 
-		<Label class="classeCard2Label flex cursor-pointer items-center gap-2">
+		<Label class="flex cursor-pointer items-center gap-2">
 			<input
 				class="cursor-pointer"
 				type="checkbox"
@@ -86,13 +82,16 @@
 			style={`padding-left:${funcaoIdentar(nivel) + editOffset}px`}
 		>
 			<Input
-				class="classeCard2Input w-90 rounded border px-2 py-1 text-sm"
+				class="w-90 rounded border px-2 py-1 text-sm"
 				// 				oninput={(e) => {
 				// }}
 
-				value={funcaoGetInput(galho.idCategorias)}
+				value={funcaoPegarInput(galho.idCategorias)}
 				oninput={(e) => {
-					funcaoSetInput(galho.idCategorias, (e.target as HTMLInputElement).value.toUpperCase());
+					funcaoDefinirInput(
+						galho.idCategorias,
+						(e.target as HTMLInputElement).value.toUpperCase(),
+					);
 				}}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') funcaoCriarSubcategoria(galho.idCategorias);
@@ -124,8 +123,8 @@
 					{funcaoIniciarCriacao}
 					{funcaoCriarSubcategoria}
 					{funcaoCancelarCriacao}
-					{funcaoGetInput}
-					{funcaoSetInput}
+					{funcaoPegarInput}
+					{funcaoDefinirInput}
 				/>
 			{/each}
 		</ul>

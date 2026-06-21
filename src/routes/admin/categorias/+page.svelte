@@ -12,9 +12,9 @@
 	let { data }: PageProps = $props();
 </script>
 
-<Card class="classeCard2">
+<Card class="gap-2 bg-slate-200 shadow-md">
 	<CardHeader>
-		<CardTitle class="classeCard1Titulo">CATEGORIAS</CardTitle>
+		<CardTitle>CATEGORIAS</CardTitle>
 		<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
 	</CardHeader>
 
