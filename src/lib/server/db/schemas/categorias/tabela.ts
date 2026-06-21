@@ -4,6 +4,8 @@ import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 export const tabelaCategorias = pgTable('tabelaCategorias', {
 	idCategorias: uuid().defaultRandom().primaryKey(),
 	campoNome: varchar({ length: 255 }).notNull(),
-	campoSlug: varchar({ length: 255 }).unique().notNull(),
-	keyCategoriasPai: uuid().references((): AnyPgColumn => tabelaCategorias.idCategorias),
+	keyCategoriasPai: uuid().references((): AnyPgColumn => tabelaCategorias.idCategorias, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade',
+	}),
 });

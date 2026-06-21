@@ -14,15 +14,24 @@
 	let { dados }: { dados: typeLido } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let arvore = $state(funcaoMontarArvore(dados));
+	// eslint-disable-next-line svelte/prefer-writable-derived
+	let arvore = $state<typeGalho[]>(funcaoMontarArvore(dados));
 	const inputs = $state<Record<string, string>>({});
 	let pesquisa = $state('');
 	let criandoEm = $state<string | null>(null);
 	const selecionadas = new SvelteSet<string>();
 	const mapa = new SvelteMap<string, typeGalho>();
 
-	// svelte-ignore state_referenced_locally
-	for (const galho of arvore) funcaoMapear(galho);
+	$effect(() => {
+		arvore = funcaoMontarArvore(dados);
+	});
+
+	$effect(() => {
+		mapa.clear();
+		for (const galho of arvore) {
+			funcaoMapear(galho);
+		}
+	});
 
 	function funcaoMapear(galho: typeGalho) {
 		mapa.set(galho.idCategorias, galho);
@@ -108,7 +117,7 @@
 		}
 	}
 
-	function removerDaArvore({
+	function funcaoRemoverDaArvore({
 		parArvore,
 		parId,
 	}: {
@@ -119,20 +128,18 @@
 			.filter((par) => par.idCategorias !== parId)
 			.map((par) => ({
 				...par,
-				filhas: removerDaArvore({
+				filhas: funcaoRemoverDaArvore({
 					parArvore: par.filhas,
 					parId,
 				}),
 			}));
 	}
 
-	function coletarIdsDosFilhos(galho: typeGalho): string[] {
+	function funcaoColetarIdsDosFilhos(galho: typeGalho): string[] {
 		let ids = [galho.idCategorias];
-
 		for (const filho of galho.filhas) {
-			ids.push(...coletarIdsDosFilhos(filho));
+			ids.push(...funcaoColetarIdsDosFilhos(filho));
 		}
-
 		return ids;
 	}
 
@@ -143,11 +150,11 @@
 			keyCategoriasPai: galho.keyCategoriasPai,
 		});
 		removerDoMapa(galho);
-		arvore = removerDaArvore({
+		arvore = funcaoRemoverDaArvore({
 			parArvore: arvore,
 			parId: apagado.idCategorias,
 		});
-		for (const id of coletarIdsDosFilhos(galho)) {
+		for (const id of funcaoColetarIdsDosFilhos(galho)) {
 			selecionadas.delete(id);
 		}
 	}
