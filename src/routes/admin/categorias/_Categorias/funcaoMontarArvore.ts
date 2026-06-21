@@ -1,30 +1,24 @@
+import type { typeCategorias } from './typeCategorias';
 import type { typeGalho } from './typeGalho';
-import type { typeLido } from './typeLido';
 
-export function funcaoMontarArvore(categorias: typeLido): typeGalho[] {
+export function funcaoMontarArvore(categorias: typeCategorias): typeGalho[] {
 	const mapa = new Map<string, typeGalho>();
-
 	for (const categoria of categorias) {
 		mapa.set(categoria.idCategorias, {
 			...categoria,
-			filhas: [],
+			filhos: [],
 		});
 	}
-
-	const raizes: typeGalho[] = [];
-
+	const arvore: typeGalho[] = [];
 	for (const categoria of mapa.values()) {
 		if (!categoria.keyCategoriasPai) {
-			raizes.push(categoria);
+			arvore.push(categoria);
 			continue;
 		}
-
 		const pai = mapa.get(categoria.keyCategoriasPai);
-
 		if (pai) {
-			pai.filhas.push(categoria);
+			pai.filhos.push(categoria);
 		}
 	}
-
-	return raizes;
+	return arvore;
 }

@@ -1,6 +1,5 @@
-export type typeLido = {
+export type typeCategorias = {
 	idCategorias: string;
 	campoNome: string;
-	campoSlug: string;
 	keyCategoriasPai: string | null;
 }[];

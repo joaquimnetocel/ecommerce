@@ -4,81 +4,93 @@
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import CategoriaTree from './CategoriaTree.svelte';
 	import { funcaoMontarArvore } from './funcaoMontarArvore';
-	import { funcaoPegarTodosDescendentes } from './funcaoPegarTodosDescendentes';
+	import { recursivaPegarTodosDescendentes } from './recursivaPegarTodosDescendentes';
 	import { remotaApagar } from './remotas/remotaApagar.remote';
 	import { remotaCriarCategoria } from './remotas/remotaCriarCategoria.remote';
 	import { sweetalertCriarCategoria } from './sweetalertCriarCategoria';
+	import type { typeCategorias } from './typeCategorias';
 	import type { typeGalho } from './typeGalho';
-	import type { typeLido } from './typeLido';
 
-	let { dados }: { dados: typeLido } = $props();
+	let { dados }: { dados: typeCategorias } = $props();
 
-	// svelte-ignore state_referenced_locally
-	// eslint-disable-next-line svelte/prefer-writable-derived
-	let arvore = $state<typeGalho[]>(funcaoMontarArvore(dados));
+	// =========================
+	// UI STATE
+	// =========================
 	const inputs = $state<Record<string, string>>({});
 	let pesquisa = $state('');
 	let criandoEm = $state<string | null>(null);
 	const selecionadas = new SvelteSet<string>();
-	const mapa = new SvelteMap<string, typeGalho>();
+
+	// =========================
+	// STATE BASE (FLAT - BANCO)
+	// =========================
+	// svelte-ignore state_referenced_locally
+	// eslint-disable-next-line svelte/prefer-writable-derived
+	let categorias = $state(structuredClone(dados));
 
 	$effect(() => {
-		arvore = funcaoMontarArvore(dados);
+		categorias = structuredClone(dados);
 	});
 
-	$effect(() => {
-		mapa.clear();
-		for (const galho of arvore) {
-			funcaoMapear(galho);
+	// =========================
+	// ÁRVORE DERIVADA
+	// =========================
+	const derivedArvore = $derived(() => funcaoMontarArvore(categorias));
+
+	// =========================
+	// MAPA DERIVADO
+	// =========================
+	const derivedMapa = $derived(() => {
+		const mapa = new SvelteMap<string, typeGalho>();
+		function funcaoMapear(galho: typeGalho) {
+			mapa.set(galho.idCategorias, galho);
+			for (const f of galho.filhos) funcaoMapear(f);
 		}
+		for (const r of derivedArvore()) funcaoMapear(r);
+		return mapa;
 	});
 
-	function funcaoMapear(galho: typeGalho) {
-		mapa.set(galho.idCategorias, galho);
-		for (const filho of galho.filhas) funcaoMapear(filho);
+	// =========================
+	// HELPERS FLAT
+	// =========================
+	function recursivaColetarIdsDosFilhos(galho: typeGalho): string[] {
+		return [galho.idCategorias, ...galho.filhos.flatMap(recursivaColetarIdsDosFilhos)];
 	}
 
-	function funcaoAtualizarPais(galho: typeGalho) {
+	// =========================
+	// CHECKBOX
+	// =========================
+	function recursivaAtualizarPais(galho: typeGalho) {
 		if (!galho.keyCategoriasPai) return;
-		const galhoPai = mapa.get(galho.keyCategoriasPai);
-		if (!galhoPai) return;
-		const algumFilhoMarcado = galhoPai.filhas.some((par) => selecionadas.has(par.idCategorias));
-		if (algumFilhoMarcado) {
-			selecionadas.add(galhoPai.idCategorias);
+		const pai = derivedMapa().get(galho.keyCategoriasPai);
+		if (!pai) return;
+		const algum = pai.filhos.some((aux) => selecionadas.has(aux.idCategorias));
+		if (algum) {
+			selecionadas.add(pai.idCategorias);
 		} else {
-			selecionadas.delete(galhoPai.idCategorias);
+			selecionadas.delete(pai.idCategorias);
 		}
-		funcaoAtualizarPais(galhoPai);
+		recursivaAtualizarPais(pai);
 	}
 
-	function funcaoCheckbox(parId: string) {
-		const galho = mapa.get(parId);
+	function funcaoCheckbox(id: string) {
+		const galho = derivedMapa().get(id);
 		if (!galho) return;
-		const estaMarcado = selecionadas.has(parId);
-		if (estaMarcado) {
-			selecionadas.delete(parId);
-
-			const descendentes = funcaoPegarTodosDescendentes(galho);
-			for (const i of descendentes) {
-				selecionadas.delete(i);
+		const marcado = selecionadas.has(id);
+		if (marcado) {
+			selecionadas.delete(id);
+			for (const d of recursivaPegarTodosDescendentes(galho)) {
+				selecionadas.delete(d);
 			}
 		} else {
-			selecionadas.add(parId);
+			selecionadas.add(id);
 		}
-
-		funcaoAtualizarPais(galho);
+		recursivaAtualizarPais(galho);
 	}
 
-	function funcaoIniciarCriacao(idPai: string) {
-		criandoEm = idPai;
-		inputs[idPai] = '';
-	}
-
-	function funcaoCancelarCriacao() {
-		if (criandoEm) delete inputs[criandoEm];
-		criandoEm = null;
-	}
-
+	// =========================
+	// INPUTS
+	// =========================
 	function funcaoSetInput(id: string, value: string) {
 		inputs[id] = value;
 	}
@@ -87,61 +99,39 @@
 		return inputs[id] ?? '';
 	}
 
+	function funcaoIniciarCriacao(id: string) {
+		criandoEm = id;
+		inputs[id] = '';
+	}
+
+	function funcaoCancelarCriacao() {
+		if (criandoEm) delete inputs[criandoEm];
+		criandoEm = null;
+	}
+
+	// =========================
+	// CRIAR
+	// =========================
 	async function funcaoCriarSubcategoria(idPai: string) {
-		const nomeDaNovaCategoria = inputs[idPai]?.trim();
-		if (!nomeDaNovaCategoria) return;
-		const pai = mapa.get(idPai);
-		if (!pai) return;
+		const nome = inputs[idPai]?.trim();
+		if (!nome) return;
+
 		const inserido = await remotaCriarCategoria({
-			campoNome: nomeDaNovaCategoria,
+			campoNome: nome,
 			keyCategoriasPai: idPai,
 			idCategorias: undefined,
 		});
-		const novoGalho: typeGalho = {
-			...inserido,
-			filhas: [],
-		};
-		mapa.set(novoGalho.idCategorias, novoGalho);
-		pai.filhas.unshift(novoGalho);
 
-		// pai.filhas.sort((a, b) => a.campoNome.localeCompare(b.campoNome));
+		// FLAT UPDATE
+		categorias = [inserido, ...categorias];
 
 		criandoEm = null;
 		delete inputs[idPai];
 	}
 
-	function removerDoMapa(galho: typeGalho) {
-		mapa.delete(galho.idCategorias);
-		for (const filho of galho.filhas) {
-			removerDoMapa(filho);
-		}
-	}
-
-	function funcaoRemoverDaArvore({
-		parArvore,
-		parId,
-	}: {
-		parArvore: typeGalho[];
-		parId: string;
-	}): typeGalho[] {
-		return parArvore
-			.filter((par) => par.idCategorias !== parId)
-			.map((par) => ({
-				...par,
-				filhas: funcaoRemoverDaArvore({
-					parArvore: par.filhas,
-					parId,
-				}),
-			}));
-	}
-
-	function funcaoColetarIdsDosFilhos(galho: typeGalho): string[] {
-		let ids = [galho.idCategorias];
-		for (const filho of galho.filhas) {
-			ids.push(...funcaoColetarIdsDosFilhos(filho));
-		}
-		return ids;
-	}
+	// =========================
+	// APAGAR
+	// =========================
 
 	async function funcaoApagar(galho: typeGalho) {
 		const apagado = await remotaApagar({
@@ -149,60 +139,46 @@
 			campoNome: galho.campoNome,
 			keyCategoriasPai: galho.keyCategoriasPai,
 		});
-		removerDoMapa(galho);
-		arvore = funcaoRemoverDaArvore({
-			parArvore: arvore,
-			parId: apagado.idCategorias,
-		});
-		for (const id of funcaoColetarIdsDosFilhos(galho)) {
+		categorias = categorias.filter((aux) => aux.idCategorias !== apagado.idCategorias);
+		for (const id of recursivaColetarIdsDosFilhos(galho)) {
 			selecionadas.delete(id);
 		}
 	}
 
-	function filtrarArvore(galho: typeGalho, pesquisa: string): typeGalho | null {
-		if (!pesquisa) return galho;
-		const match = galho.campoNome.toLowerCase().includes(pesquisa.toLowerCase());
-		const filhas = galho.filhas
-			.map((par) => filtrarArvore(par, pesquisa))
-			.filter((par): par is typeGalho => par !== null);
-		if (match || filhas.length) {
-			return { ...galho, filhas };
+	// =========================
+	// FILTRO
+	// =========================
+	function filtrar(galho: typeGalho, texto: string): typeGalho | null {
+		if (!texto) return galho;
+		const match = galho.campoNome.toLowerCase().includes(texto.toLowerCase());
+		const filhos = galho.filhos
+			.map((f) => filtrar(f, texto))
+			.filter((v): v is typeGalho => v !== null);
+		if (match || filhos.length) {
+			return { ...galho, filhos: filhos };
 		}
 		return null;
 	}
 
-	const derivedCategoriasFiltradas = $derived(
-		pesquisa
-			? arvore
-					.map((par) => filtrarArvore(par, pesquisa))
-					.filter((par): par is typeGalho => par !== null)
-			: arvore,
-	);
+	const derivedArvoreFiltrada = $derived(() => {
+		const a = derivedArvore();
+		if (!pesquisa) return a;
+		return a.map((aux) => filtrar(aux, pesquisa)).filter((aux): aux is typeGalho => aux !== null);
+	});
 </script>
 
-{#if arvore.length > 0}
-	<Input
-		bind:value={pesquisa}
-		placeholder="PESQUISAR CATEGORIA..."
-		class="classeCard2Input mb-5 w-full rounded border px-3 py-2"
-	/>
+{#if derivedArvore().length > 0}
+	<Input bind:value={pesquisa} placeholder="PESQUISAR CATEGORIA..." />
 {/if}
 
 <div class="space-y-4">
 	<ul>
-		{#if derivedCategoriasFiltradas.length === 0}
-			<div class="space-y-4 text-center">
-				<div class="text-white">NENHUMA CATEGORIA ENCONTRADA</div>
-				{#if arvore.length === 0}
-					<div>
-						<Button class="cursor-pointer">+ CRIAR PRIMEIRA CATEGORIA</Button>
-					</div>
-				{/if}
-			</div>
+		{#if derivedArvoreFiltrada().length === 0}
+			<div class="text-center">NENHUMA CATEGORIA ENCONTRADA</div>
 		{:else}
-			{#each derivedCategoriasFiltradas as categoria (categoria.idCategorias)}
+			{#each derivedArvoreFiltrada() as galho (galho.idCategorias)}
 				<CategoriaTree
-					{categoria}
+					{galho}
 					nivel={0}
 					{selecionadas}
 					{funcaoCheckbox}
@@ -218,28 +194,20 @@
 		{/if}
 	</ul>
 
-	<!-- <Button class="mt-2 cursor-pointer rounded border px-4 py-2">SALVAR</Button> -->
 	<Button
 		onclick={async () => {
-			const nomeDaNovaCategoria = await sweetalertCriarCategoria();
-			if (nomeDaNovaCategoria === null) {
-				return;
-			}
+			const digitado = await sweetalertCriarCategoria();
+			if (!digitado) return;
 			const inserido = await remotaCriarCategoria({
-				campoNome: nomeDaNovaCategoria,
+				campoNome: digitado,
 				keyCategoriasPai: null,
 				idCategorias: undefined,
 			});
-			const novoGalho: typeGalho = {
-				...inserido,
-				filhas: [],
-			};
-			mapa.set(novoGalho.idCategorias, novoGalho);
-			arvore.unshift(novoGalho);
+			categorias = [inserido, ...categorias];
 		}}
-		class="cursor-pointer">+ CRIAR CATEGORIA</Button
 	>
+		+ CRIAR CATEGORIA
+	</Button>
 </div>
 
 <pre>{JSON.stringify([...selecionadas], null, 2)}</pre>
-<!-- <pre>{JSON.stringify(arvore, null, 2)}</pre> -->

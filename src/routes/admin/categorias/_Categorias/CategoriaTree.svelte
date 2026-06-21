@@ -7,7 +7,7 @@
 	import type { typeGalho } from './typeGalho';
 
 	let {
-		categoria,
+		galho,
 		nivel = 0,
 		selecionadas,
 		funcaoCheckbox,
@@ -19,7 +19,7 @@
 		funcaoSetInput,
 		funcaoApagar,
 	}: {
-		categoria: typeGalho;
+		galho: typeGalho;
 		nivel?: number;
 		selecionadas: SvelteSet<string>;
 		funcaoCheckbox: (id: string) => void;
@@ -41,7 +41,7 @@
 <li>
 	<!-- HEADER DA CATEGORIA -->
 	<div class="flex items-center gap-2" style={`padding-left:${funcaoIdentar(nivel)}px`}>
-		{#if categoria.filhas.length}
+		{#if galho.filhos.length}
 			<button
 				type="button"
 				class="classeCard2Label w-5 cursor-pointer"
@@ -57,30 +57,30 @@
 			<input
 				class="cursor-pointer"
 				type="checkbox"
-				checked={selecionadas.has(categoria.idCategorias)}
-				onchange={() => funcaoCheckbox(categoria.idCategorias)}
+				checked={selecionadas.has(galho.idCategorias)}
+				onchange={() => funcaoCheckbox(galho.idCategorias)}
 			/>
-			<span>{categoria.campoNome}</span>
+			<span>{galho.campoNome}</span>
 		</Label>
 
 		<Button
 			size="xs"
 			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => funcaoApagar(categoria)}
+			onclick={() => funcaoApagar(galho)}
 		>
 			APAGAR
 		</Button>
 		<Button
 			size="xs"
 			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => funcaoIniciarCriacao(categoria.idCategorias)}
+			onclick={() => funcaoIniciarCriacao(galho.idCategorias)}
 		>
 			+ SUBCATEGORIA
 		</Button>
 	</div>
 
 	<!-- INPUT ALINHADO CORRETAMENTE -->
-	{#if criandoEm === categoria.idCategorias}
+	{#if criandoEm === galho.idCategorias}
 		<div
 			class="flex items-center gap-2"
 			style={`padding-left:${funcaoIdentar(nivel) + editOffset}px`}
@@ -90,15 +90,12 @@
 				// 				oninput={(e) => {
 				// }}
 
-				value={funcaoGetInput(categoria.idCategorias)}
+				value={funcaoGetInput(galho.idCategorias)}
 				oninput={(e) => {
-					funcaoSetInput(
-						categoria.idCategorias,
-						(e.target as HTMLInputElement).value.toUpperCase(),
-					);
+					funcaoSetInput(galho.idCategorias, (e.target as HTMLInputElement).value.toUpperCase());
 				}}
 				onkeydown={(e) => {
-					if (e.key === 'Enter') funcaoCriarSubcategoria(categoria.idCategorias);
+					if (e.key === 'Enter') funcaoCriarSubcategoria(galho.idCategorias);
 					if (e.key === 'Escape') funcaoCancelarCriacao();
 				}}
 				autofocus
@@ -106,7 +103,7 @@
 
 			<Button
 				class="cursor-pointer rounded border px-2 py-1 text-xs"
-				onclick={() => funcaoCriarSubcategoria(categoria.idCategorias)}
+				onclick={() => funcaoCriarSubcategoria(galho.idCategorias)}
 			>
 				CRIAR
 			</Button>
@@ -114,11 +111,11 @@
 	{/if}
 
 	<!-- FILHOS -->
-	{#if aberto && categoria.filhas.length}
+	{#if aberto && galho.filhos.length}
 		<ul>
-			{#each categoria.filhas as filha (filha.idCategorias)}
+			{#each galho.filhos as filha (filha.idCategorias)}
 				<CategoriaTree
-					categoria={filha}
+					galho={filha}
 					nivel={nivel + 1}
 					{funcaoApagar}
 					{selecionadas}
