@@ -1,6 +1,6 @@
-export type typeGalho = {
+export type tipoGalho = {
 	idCategorias: string;
 	campoNome: string;
 	keyCategoriasPai: string | null;
-	filhos: typeGalho[];
+	filhos: tipoGalho[];
 };

@@ -1,6 +1,6 @@
-import type { typeGalho } from './typeGalho';
+import type { tipoGalho } from '../../tipoGalho';
 
-export function recursivaPegarTodosDescendentes(galho: typeGalho): string[] {
+export function recursivaPegarTodosDescendentes(galho: tipoGalho): string[] {
 	const ids: string[] = [];
 
 	for (const filha of galho.filhos) {

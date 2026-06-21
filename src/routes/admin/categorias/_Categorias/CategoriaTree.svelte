@@ -2,34 +2,22 @@
 	import { Button } from '$lib/shadcn/componentes/ui/button';
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Label } from '$lib/shadcn/componentes/ui/label';
-	import type { SvelteSet } from 'svelte/reactivity';
+	import { Plus, Trash2 } from '@lucide/svelte';
 	import CategoriaTree from './CategoriaTree.svelte';
-	import type { typeGalho } from './typeGalho';
+	import { funcaoApagar } from './funcoes/store/funcaoApagar';
+	import { funcaoCheckbox } from './funcoes/store/funcaoCheckbox';
+	import { funcaoCriarSubcategoria } from './funcoes/store/funcaoCriarSubcategoria';
+	import { store } from './store.svelte';
+	import type { tipoGalho } from './tipoGalho';
 
 	let {
 		galho,
 		nivel = 0,
-		selecionadas,
-		funcaoCheckbox,
-		criandoEm,
-		funcaoIniciarCriacao,
-		funcaoCriarSubcategoria,
-		funcaoCancelarCriacao,
-		funcaoPegarInput,
-		funcaoDefinirInput,
-		funcaoApagar,
+		// funcaoCheckbox,
 	}: {
-		galho: typeGalho;
+		galho: tipoGalho;
 		nivel?: number;
-		selecionadas: SvelteSet<string>;
-		funcaoCheckbox: (id: string) => void;
-		criandoEm: string | null;
-		funcaoIniciarCriacao: (idPai: string) => void;
-		funcaoCriarSubcategoria: (idPai: string) => Promise<void>;
-		funcaoApagar: (id: typeGalho) => Promise<void>;
-		funcaoCancelarCriacao: () => void;
-		funcaoPegarInput: (id: string) => string;
-		funcaoDefinirInput: (id: string, value: string) => void;
+		// funcaoCheckbox: (id: string) => void;
 	} = $props();
 
 	let aberto = $state(true);
@@ -39,7 +27,6 @@
 </script>
 
 <li>
-	<!-- HEADER DA CATEGORIA -->
 	<div class="flex items-center gap-2" style={`padding-left:${funcaoIdentar(nivel)}px`}>
 		{#if galho.filhos.length}
 			<button type="button" class="w-5 cursor-pointer" onclick={() => (aberto = !aberto)}>
@@ -53,55 +40,56 @@
 			<input
 				class="cursor-pointer"
 				type="checkbox"
-				checked={selecionadas.has(galho.idCategorias)}
+				checked={store.selecionadas.has(galho.idCategorias)}
 				onchange={() => funcaoCheckbox(galho.idCategorias)}
 			/>
 			<span>{galho.campoNome}</span>
 		</Label>
-
 		<Button
 			size="xs"
 			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => funcaoApagar(galho)}
+			onclick={() => {
+				funcaoApagar(galho);
+			}}
 		>
-			APAGAR
+			<Trash2 />
 		</Button>
 		<Button
 			size="xs"
 			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => funcaoIniciarCriacao(galho.idCategorias)}
+			onclick={() => {
+				store.criandoEm = galho.idCategorias;
+				store.inputs[galho.idCategorias] = '';
+			}}
 		>
-			+ SUBCATEGORIA
+			<Plus /> SUBCATEGORIA
 		</Button>
 	</div>
 
-	<!-- INPUT ALINHADO CORRETAMENTE -->
-	{#if criandoEm === galho.idCategorias}
+	{#if store.criandoEm === galho.idCategorias}
 		<div
 			class="flex items-center gap-2"
 			style={`padding-left:${funcaoIdentar(nivel) + editOffset}px`}
 		>
 			<Input
-				class="w-90 rounded border px-2 py-1 text-sm"
-				// 				oninput={(e) => {
-				// }}
-
-				value={funcaoPegarInput(galho.idCategorias)}
+				class="h-7 w-90 rounded border-2 border-slate-400 bg-white px-2 py-1 text-sm"
+				value={store.inputs[galho.idCategorias] ?? ''}
 				oninput={(e) => {
-					funcaoDefinirInput(
-						galho.idCategorias,
-						(e.target as HTMLInputElement).value.toUpperCase(),
-					);
+					store.inputs[galho.idCategorias] = (e.target as HTMLInputElement).value.toUpperCase();
 				}}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') funcaoCriarSubcategoria(galho.idCategorias);
-					if (e.key === 'Escape') funcaoCancelarCriacao();
+					if (e.key === 'Escape') {
+						if (store.criandoEm) delete store.inputs[store.criandoEm];
+						store.criandoEm = null;
+					}
 				}}
 				autofocus
 			/>
 
 			<Button
 				class="cursor-pointer rounded border px-2 py-1 text-xs"
+				size="sm"
 				onclick={() => funcaoCriarSubcategoria(galho.idCategorias)}
 			>
 				CRIAR
@@ -109,23 +97,10 @@
 		</div>
 	{/if}
 
-	<!-- FILHOS -->
 	{#if aberto && galho.filhos.length}
 		<ul>
 			{#each galho.filhos as filha (filha.idCategorias)}
-				<CategoriaTree
-					galho={filha}
-					nivel={nivel + 1}
-					{funcaoApagar}
-					{selecionadas}
-					{funcaoCheckbox}
-					{criandoEm}
-					{funcaoIniciarCriacao}
-					{funcaoCriarSubcategoria}
-					{funcaoCancelarCriacao}
-					{funcaoPegarInput}
-					{funcaoDefinirInput}
-				/>
+				<CategoriaTree galho={filha} nivel={nivel + 1} />
 			{/each}
 		</ul>
 	{/if}

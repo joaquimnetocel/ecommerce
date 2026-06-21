@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { ChevronDown } from '@lucide/svelte';
-	// import TrustpilotPlugin from '$lib/core/components/plugins/trustpilot-plugin.svelte'
 	import { resolve } from '$app/paths';
 	import { PUBLIC_LOJA } from '$env/static/public';
 	import WhatsappChat from '$lib/componentes/WhatsappChat.svelte';
@@ -9,6 +7,7 @@
 	import paypal from '$lib/imagens/metodosDePagamento/paypal.png';
 	import skrill from '$lib/imagens/metodosDePagamento/skrill.png';
 	import visa from '$lib/imagens/metodosDePagamento/visa.png';
+	import { ChevronDown } from '@lucide/svelte';
 	import RedesSociais from './RedesSociais.svelte';
 
 	let { propDeveColapsarNoMobile = false } = $props();
