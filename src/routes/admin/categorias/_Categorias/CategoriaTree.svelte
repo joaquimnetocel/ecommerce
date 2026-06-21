@@ -10,25 +10,27 @@
 		categoria,
 		nivel = 0,
 		selecionadas,
-		funcaoToggle,
+		funcaoCheckbox,
 		criandoEm,
 		funcaoIniciarCriacao,
-		funcaoSalvarSubcategoria,
+		funcaoCriarSubcategoria,
 		funcaoCancelarCriacao,
 		funcaoGetInput,
 		funcaoSetInput,
-	} = $props<{
+		funcaoApagar,
+	}: {
 		categoria: typeGalho;
 		nivel?: number;
 		selecionadas: SvelteSet<string>;
-		funcaoToggle: (id: string) => void;
+		funcaoCheckbox: (id: string) => void;
 		criandoEm: string | null;
 		funcaoIniciarCriacao: (idPai: string) => void;
-		funcaoSalvarSubcategoria: (idPai: string) => void;
+		funcaoCriarSubcategoria: (idPai: string) => Promise<void>;
+		funcaoApagar: (id: typeGalho) => Promise<void>;
 		funcaoCancelarCriacao: () => void;
 		funcaoGetInput: (id: string) => string;
 		funcaoSetInput: (id: string, value: string) => void;
-	}>();
+	} = $props();
 
 	let aberto = $state(true);
 
@@ -56,7 +58,7 @@
 				class="cursor-pointer"
 				type="checkbox"
 				checked={selecionadas.has(categoria.idCategorias)}
-				onchange={() => funcaoToggle(categoria.idCategorias)}
+				onchange={() => funcaoCheckbox(categoria.idCategorias)}
 			/>
 			<span>{categoria.campoNome}</span>
 		</Label>
@@ -64,14 +66,21 @@
 		<Button
 			size="xs"
 			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => funcaoIniciarCriacao(categoria.idChamadas)}
+			onclick={() => funcaoApagar(categoria)}
+		>
+			APAGAR
+		</Button>
+		<Button
+			size="xs"
+			class="cursor-pointer rounded border px-2 py-1 text-xs"
+			onclick={() => funcaoIniciarCriacao(categoria.idCategorias)}
 		>
 			+ SUBCATEGORIA
 		</Button>
 	</div>
 
 	<!-- INPUT ALINHADO CORRETAMENTE -->
-	{#if criandoEm === categoria.idChamadas}
+	{#if criandoEm === categoria.idCategorias}
 		<div
 			class="flex items-center gap-2"
 			style={`padding-left:${funcaoIdentar(nivel) + editOffset}px`}
@@ -81,12 +90,15 @@
 				// 				oninput={(e) => {
 				// }}
 
-				value={funcaoGetInput(categoria.idChamadas)}
+				value={funcaoGetInput(categoria.idCategorias)}
 				oninput={(e) => {
-					funcaoSetInput(categoria.idChamadas, (e.target as HTMLInputElement).value.toUpperCase());
+					funcaoSetInput(
+						categoria.idCategorias,
+						(e.target as HTMLInputElement).value.toUpperCase(),
+					);
 				}}
 				onkeydown={(e) => {
-					if (e.key === 'Enter') funcaoSalvarSubcategoria(categoria.idChamadas);
+					if (e.key === 'Enter') funcaoCriarSubcategoria(categoria.idCategorias);
 					if (e.key === 'Escape') funcaoCancelarCriacao();
 				}}
 				autofocus
@@ -94,7 +106,7 @@
 
 			<Button
 				class="cursor-pointer rounded border px-2 py-1 text-xs"
-				onclick={() => funcaoSalvarSubcategoria(categoria.idChamadas)}
+				onclick={() => funcaoCriarSubcategoria(categoria.idCategorias)}
 			>
 				CRIAR
 			</Button>
@@ -104,15 +116,16 @@
 	<!-- FILHOS -->
 	{#if aberto && categoria.filhas.length}
 		<ul>
-			{#each categoria.filhas as filha (filha.idChamadas)}
+			{#each categoria.filhas as filha (filha.idCategorias)}
 				<CategoriaTree
 					categoria={filha}
 					nivel={nivel + 1}
+					{funcaoApagar}
 					{selecionadas}
-					{funcaoToggle}
+					{funcaoCheckbox}
 					{criandoEm}
 					{funcaoIniciarCriacao}
-					{funcaoSalvarSubcategoria}
+					{funcaoCriarSubcategoria}
 					{funcaoCancelarCriacao}
 					{funcaoGetInput}
 					{funcaoSetInput}
