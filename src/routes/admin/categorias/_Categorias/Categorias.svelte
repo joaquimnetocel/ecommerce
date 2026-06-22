@@ -36,6 +36,7 @@
 	</ul>
 
 	<Button
+		class="cursor-pointer"
 		onclick={async () => {
 			const digitado = await sweetalertCriar();
 			if (!digitado) return;
