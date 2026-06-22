@@ -1,6 +1,6 @@
-import { store } from '../../store.svelte';
-import type { tipoGalho } from '../../tipoGalho';
-import { remotaEditar } from '../remotas/remotaEditar.remote';
+import { remotaEditar } from '../funcoes/remotaEditar.remote';
+import type { tipoGalho } from '../tipoGalho';
+import { store } from './store.svelte';
 
 export async function funcaoEditar(galho: tipoGalho, novoNome: string) {
 	const editado = await remotaEditar({

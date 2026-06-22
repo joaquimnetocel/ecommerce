@@ -1,6 +1,6 @@
-import { deriveds } from '../../deriveds.svelte';
-import { store } from '../../store.svelte';
-import type { tipoGalho } from '../../tipoGalho';
+import { deriveds } from '../deriveds.svelte';
+import type { tipoGalho } from '../tipoGalho';
+import { store } from './store.svelte';
 
 export function recursivaAtualizarPais(galho: tipoGalho) {
 	if (!galho.keyCategoriasPai) return;

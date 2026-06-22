@@ -1,5 +1,5 @@
-import type { tipoCategorias } from '../../tipoCategorias';
-import type { tipoGalho } from '../../tipoGalho';
+import type { tipoCategorias } from '../tipoCategorias';
+import type { tipoGalho } from '../tipoGalho';
 
 export function funcaoMontarArvore(categorias: tipoCategorias): tipoGalho[] {
 	const mapa = new Map<string, tipoGalho>();

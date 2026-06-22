@@ -1,4 +1,4 @@
-import type { tipoGalho } from '../../tipoGalho';
+import type { tipoGalho } from '../tipoGalho';
 
 export function recursivaPesquisar(galho: tipoGalho, texto: string): tipoGalho | null {
 	if (!texto) return galho;

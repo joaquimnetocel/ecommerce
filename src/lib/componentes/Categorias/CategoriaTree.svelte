@@ -6,13 +6,13 @@
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { Pencil, Plus, Trash2 } from '@lucide/svelte';
 	import CategoriaTree from './CategoriaTree.svelte';
-	import { sweetalertApagar } from './funcoes/independentes/sweetalertApagar';
-	import { sweetalertEditar } from './funcoes/independentes/sweetalertEditar';
-	import { funcaoApagar } from './funcoes/store/funcaoApagar';
-	import { funcaoCheckbox } from './funcoes/store/funcaoCheckbox';
-	import { funcaoCriarSubcategoria } from './funcoes/store/funcaoCriarSubcategoria';
-	import { funcaoEditar } from './funcoes/store/funcaoEditar';
-	import { store } from './store.svelte';
+	import { sweetalertApagar } from './funcoes/sweetalertApagar';
+	import { sweetalertEditar } from './funcoes/sweetalertEditar';
+	import { funcaoApagar } from './store/funcaoApagar';
+	import { funcaoCheckbox } from './store/funcaoCheckbox';
+	import { funcaoCriarSubcategoria } from './store/funcaoCriarSubcategoria';
+	import { funcaoEditar } from './store/funcaoEditar';
+	import { store } from './store/store.svelte';
 	import type { tipoGalho } from './tipoGalho';
 
 	let {

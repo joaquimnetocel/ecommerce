@@ -1,5 +1,5 @@
-import { store } from '../../store.svelte';
-import { remotaCriar } from '../remotas/remotaCriar.remote';
+import { remotaCriar } from '../funcoes/remotaCriar.remote';
+import { store } from './store.svelte';
 
 export async function funcaoCriarSubcategoria(idPai: string) {
 	const nome = store.inputs[idPai]?.trim();

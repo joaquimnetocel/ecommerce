@@ -1,6 +1,6 @@
-import { funcaoMontarArvore } from './funcoes/independentes/funcaoMontarArvore';
-import { recursivaPesquisar } from './funcoes/independentes/recursivaPesquivar';
-import { store } from './store.svelte';
+import { funcaoMontarArvore } from './funcoes/funcaoMontarArvore';
+import { recursivaPesquisar } from './funcoes/recursivaPesquivar';
+import { store } from './store/store.svelte';
 import type { tipoGalho } from './tipoGalho';
 
 export const deriveds = (() => {
@@ -21,11 +21,8 @@ export const deriveds = (() => {
 		return resultado;
 	});
 	const arvoreFiltrada = $derived.by(() => {
-		const a = deriveds.arvore();
-
-		if (!store.pesquisa) return a;
-
-		return a
+		if (!store.pesquisa) return arvore;
+		return arvore
 			.map((aux) => recursivaPesquisar(aux, store.pesquisa))
 			.filter((aux): aux is tipoGalho => aux !== null);
 	});

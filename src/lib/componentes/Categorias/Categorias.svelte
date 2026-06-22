@@ -4,9 +4,9 @@
 	import { Plus } from '@lucide/svelte';
 	import CategoriaTree from './CategoriaTree.svelte';
 	import { deriveds } from './deriveds.svelte';
-	import { sweetalertCriar } from './funcoes/independentes/sweetalertCriar';
-	import { remotaCriar } from './funcoes/remotas/remotaCriar.remote';
-	import { store } from './store.svelte';
+	import { remotaCriar } from './funcoes/remotaCriar.remote';
+	import { sweetalertCriar } from './funcoes/sweetalertCriar';
+	import { store } from './store/store.svelte';
 	import type { tipoCategorias } from './tipoCategorias';
 
 	let { dados }: { dados: tipoCategorias } = $props();

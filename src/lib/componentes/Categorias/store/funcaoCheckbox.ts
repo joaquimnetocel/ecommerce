@@ -1,7 +1,7 @@
-import { deriveds } from '../../deriveds.svelte';
-import { store } from '../../store.svelte';
-import { recursivaColetarIdsDosFilhos } from '../independentes/recursivaColetarIdsDosFilhos';
+import { deriveds } from '../deriveds.svelte';
+import { recursivaColetarIdsDosFilhos } from '../funcoes/recursivaColetarIdsDosFilhos';
 import { recursivaAtualizarPais } from './recursivaAtualizarPais';
+import { store } from './store.svelte';
 
 export function funcaoCheckbox(id: string) {
 	const galho = deriveds.mapa().get(id);

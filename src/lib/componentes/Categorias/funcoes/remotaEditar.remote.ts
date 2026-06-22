@@ -3,7 +3,7 @@ import { db } from '$lib/server/db';
 import { tabelaCategorias } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { schema } from './schema';
+import { schema } from '../schema';
 
 export const remotaEditar = command(schema, async (dados) => {
 	if (dados.idCategorias === undefined) {
