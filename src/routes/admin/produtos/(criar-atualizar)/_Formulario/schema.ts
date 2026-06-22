@@ -49,6 +49,21 @@ export const schema = v.object({
 		),
 		v.minLength(1, 'O PRODUTO DEVE POSSUIR AO MENOS UMA VARIANTE.'),
 	),
+	formCategorias: v.array(
+		v.object({
+			idCategorias: v.pipe(v.string(), v.uuid('ID DA CATEGORIA INVÁLIDO.')),
+			campoNome: v.pipe(
+				v.string(),
+				v.trim(),
+				v.minLength(1, 'ESTE CAMPO É OBRIGATÓRIO.'),
+				v.maxLength(
+					tamanhos.produtos.campoNome,
+					`ESTE CAMPO DEVE TER NO MÁXIMO ${tamanhos.categorias.campoNome} CARACTERES.`,
+				),
+			),
+			keyCategoriasPai: v.nullable(v.pipe(v.string(), v.uuid('ID DA CATEGORIA PAI INVÁLIDO.'))),
+		}),
+	),
 });
 
 export type typeSchemaInput = v.InferInput<typeof schema>;

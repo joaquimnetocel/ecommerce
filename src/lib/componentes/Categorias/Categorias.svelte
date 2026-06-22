@@ -4,8 +4,7 @@
 	import { Plus } from '@lucide/svelte';
 	import CategoriaTree from './CategoriaTree.svelte';
 	import { deriveds } from './deriveds.svelte';
-	import { remotaCriar } from './funcoes/remotaCriar.remote';
-	import { sweetalertCriar } from './funcoes/sweetalertCriar';
+	import { funcaoCriarCategoria } from './store/funcaoCriarCategoria';
 	import { store } from './store/store.svelte';
 	import type { tipoCategorias } from './tipoCategorias';
 
@@ -16,7 +15,7 @@
 	}: { verCheckboxes: boolean; dados: tipoCategorias; apenasMarcadas?: boolean } = $props();
 
 	$effect.pre(() => {
-		store.categorias = structuredClone(dados);
+		store.categorias = structuredClone(dados ?? []);
 	});
 
 	$effect.pre(() => {
@@ -57,19 +56,7 @@
 		{/if}
 	</ul>
 
-	<Button
-		class="cursor-pointer"
-		onclick={async () => {
-			const digitado = await sweetalertCriar();
-			if (!digitado) return;
-			const inserido = await remotaCriar({
-				campoNome: digitado,
-				keyCategoriasPai: null,
-				idCategorias: undefined,
-			});
-			store.categorias = [inserido, ...store.categorias];
-		}}
-	>
+	<Button class="cursor-pointer" onclick={funcaoCriarCategoria}>
 		<Plus /> CRIAR CATEGORIA
 	</Button>
 </div>

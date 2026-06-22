@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Categorias from '$lib/componentes/Categorias/Categorias.svelte';
+	import { funcaoCriarCategoria } from '$lib/componentes/Categorias/store/funcaoCriarCategoria';
 	import { store } from '$lib/componentes/Categorias/store/store.svelte';
+	import Button from '$lib/shadcn/componentes/ui/button/button.svelte';
 	import {
 		Card,
 		CardContent,
@@ -15,8 +17,11 @@
 
 <Card class="gap-2 bg-slate-200 shadow-md">
 	<CardHeader>
-		<CardTitle>CATEGORIAS</CardTitle>
-		<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
+		<div class="flex items-center justify-between">
+			<CardTitle>CATEGORIAS</CardTitle>
+			<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
+			<Button onclick={funcaoCriarCategoria}>CRIAR CATEGORIA</Button>
+		</div>
 	</CardHeader>
 
 	<CardContent class="space-y-4">

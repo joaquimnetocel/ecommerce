@@ -2,6 +2,7 @@ import type { typeSchemaInput } from '../../_Formulario/schema';
 import type { typeDados } from '../../_Formulario/typeDados';
 
 type typeFormProdutos = typeSchemaInput['formProdutos'];
+type typeFormCategorias = typeSchemaInput['formCategorias'];
 type typeFormVariantes = typeSchemaInput['formVariantes'];
 type typeVariante = typeFormVariantes[number];
 
@@ -21,8 +22,17 @@ export function funcaoCriarInputs(lido: Exclude<typeDados['lido'], undefined>): 
 			campoAtributos: corrente.campoAtributos,
 		}),
 	);
+	const formCategorias: typeFormCategorias = lido.relCategoriasProdutos.map((corrente) => {
+		return {
+			campoNome: corrente.relCategoria.campoNome,
+			keyCategoriasPai: corrente.relCategoria.keyCategoriasPai,
+			idCategorias: corrente.relCategoria.idCategorias,
+		};
+	});
+
 	return {
 		formProdutos,
 		formVariantes,
+		formCategorias,
 	};
 }
