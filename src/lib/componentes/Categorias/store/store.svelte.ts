@@ -7,4 +7,5 @@ export const store = $state({
 	criandoEm: null as string | null,
 	inputs: {} as Record<string, string>,
 	selecionadas: new SvelteSet<string>(),
+	apenasMarcadas: false,
 });

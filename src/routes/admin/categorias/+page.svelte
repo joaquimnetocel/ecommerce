@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Categorias from '$lib/componentes/Categorias/Categorias.svelte';
+	import { store } from '$lib/componentes/Categorias/store/store.svelte';
 	import {
 		Card,
 		CardContent,
@@ -19,6 +20,8 @@
 	</CardHeader>
 
 	<CardContent class="space-y-4">
-		<Categorias dados={data.lido} />
+		<Categorias dados={data.lido} verCheckboxes={true} />
 	</CardContent>
 </Card>
+
+<pre>{JSON.stringify([...store.selecionadas], null, 2)}</pre>

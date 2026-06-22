@@ -18,11 +18,11 @@
 	let {
 		galho,
 		nivel = 0,
-		// funcaoCheckbox,
+		verCheckboxes,
 	}: {
 		galho: tipoGalho;
 		nivel?: number;
-		// funcaoCheckbox: (id: string) => void;
+		verCheckboxes: boolean;
 	} = $props();
 
 	let aberto = $state(true);
@@ -40,14 +40,15 @@
 		{:else}
 			<div class="w-5"></div>
 		{/if}
-
-		<Label class="flex cursor-pointer items-center gap-2">
-			<input
-				class="cursor-pointer"
-				type="checkbox"
-				checked={store.selecionadas.has(galho.idCategorias)}
-				onchange={() => funcaoCheckbox(galho.idCategorias)}
-			/>
+		<Label class={`flex ${verCheckboxes ? 'cursor-pointer' : ''} items-center gap-2`}>
+			{#if verCheckboxes}
+				<input
+					class="cursor-pointer"
+					type="checkbox"
+					checked={store.selecionadas.has(galho.idCategorias)}
+					onchange={() => funcaoCheckbox(galho.idCategorias)}
+				/>
+			{/if}
 			<span>{galho.campoNome}</span>
 		</Label>
 		<ButtonGroup.Root>
@@ -123,7 +124,7 @@
 	{#if aberto && galho.filhos.length}
 		<ul>
 			{#each galho.filhos as filha (filha.idCategorias)}
-				<CategoriaTree galho={filha} nivel={nivel + 1} />
+				<CategoriaTree galho={filha} nivel={nivel + 1} {verCheckboxes} />
 			{/each}
 		</ul>
 	{/if}
