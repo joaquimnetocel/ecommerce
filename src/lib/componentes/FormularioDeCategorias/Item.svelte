@@ -5,7 +5,7 @@
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { Pencil, Plus, Trash2 } from '@lucide/svelte';
-	import CategoriaTree from './CategoriaTree.svelte';
+	import CategoriaTree from './Item.svelte';
 	import { sweetalertApagar } from './funcoes/sweetalertApagar';
 	import { sweetalertEditar } from './funcoes/sweetalertEditar';
 	import { funcaoApagar } from './store/funcaoApagar';

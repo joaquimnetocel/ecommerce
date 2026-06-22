@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Categorias from '$lib/componentes/Categorias/Categorias.svelte';
-	import { funcaoCriarCategoria } from '$lib/componentes/Categorias/store/funcaoCriarCategoria';
-	import { store } from '$lib/componentes/Categorias/store/store.svelte';
+	import Categorias from '$lib/componentes/FormularioDeCategorias/FormularioDeCategorias.svelte';
+	import { funcaoCriarCategoria } from '$lib/componentes/FormularioDeCategorias/store/funcaoCriarCategoria';
+	import { store } from '$lib/componentes/FormularioDeCategorias/store/store.svelte';
 	import Button from '$lib/shadcn/componentes/ui/button/button.svelte';
 	import {
 		Card,

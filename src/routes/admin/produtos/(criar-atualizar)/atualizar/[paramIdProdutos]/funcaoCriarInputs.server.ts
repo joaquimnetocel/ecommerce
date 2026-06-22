@@ -23,11 +23,7 @@ export function funcaoCriarInputs(lido: Exclude<typeDados['lido'], undefined>): 
 		}),
 	);
 	const formCategorias: typeFormCategorias = lido.relCategoriasProdutos.map((corrente) => {
-		return {
-			campoNome: corrente.relCategoria.campoNome,
-			keyCategoriasPai: corrente.relCategoria.keyCategoriasPai,
-			idCategorias: corrente.relCategoria.idCategorias,
-		};
+		return corrente.keyCategorias;
 	});
 
 	return {

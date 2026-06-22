@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Categorias from '$lib/componentes/Categorias/Categorias.svelte';
+	import FormularioDeCategorias from '$lib/componentes/FormularioDeCategorias/FormularioDeCategorias.svelte';
 	import {
 		Card,
 		CardContent,
@@ -55,6 +55,11 @@
 			</Label>
 		</div>
 		<FormularioDeVariantes {dados} />
-		<Categorias dados={dados.inputs.formCategorias} apenasMarcadas={true} verCheckboxes={true} />
+		<FormularioDeCategorias
+			marcadas={dados.inputs.formCategorias}
+			dados={dados.categorias}
+			apenasMarcadas={true}
+			verCheckboxes={true}
+		/>
 	</CardContent>
 </Card>

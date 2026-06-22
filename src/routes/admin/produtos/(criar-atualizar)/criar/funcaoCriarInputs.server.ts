@@ -2,6 +2,7 @@ import type { typeSchemaInput } from '../_Formulario/schema';
 
 type typeFormProdutos = typeSchemaInput['formProdutos'];
 type typeFormVariantes = typeSchemaInput['formVariantes'];
+type typeFormCategorias = typeSchemaInput['formCategorias'];
 
 export function funcaoCriarInputs(): typeSchemaInput {
 	const formProdutos: typeFormProdutos = {
@@ -19,7 +20,10 @@ export function funcaoCriarInputs(): typeSchemaInput {
 			campoAtributos: { '': '' },
 		},
 	];
+	const formCategorias: typeFormCategorias = [];
+
 	return {
+		formCategorias,
 		formProdutos,
 		formVariantes,
 	};

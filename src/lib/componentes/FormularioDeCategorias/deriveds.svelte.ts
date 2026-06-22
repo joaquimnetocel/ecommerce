@@ -23,6 +23,7 @@ function recursivaFiltrarMarcadas(galho: tipoGalho): tipoGalho | null {
 export const deriveds = (() => {
 	const arvore = $derived(funcaoMontarArvore(store.categorias));
 	const mapa = $derived.by(() => {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const resultado = new Map<string, tipoGalho>();
 
 		function funcaoMapear(galho: tipoGalho) {
