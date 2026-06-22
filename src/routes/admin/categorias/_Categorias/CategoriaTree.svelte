@@ -1,12 +1,17 @@
 <script lang="ts">
+	import { tamanhos } from '$lib/constantes/tamanhos';
 	import { Button } from '$lib/shadcn/componentes/ui/button';
+	import * as ButtonGroup from '$lib/shadcn/componentes/ui/button-group';
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Label } from '$lib/shadcn/componentes/ui/label';
-	import { Plus, Trash2 } from '@lucide/svelte';
+	import { Pencil, Plus, Trash2 } from '@lucide/svelte';
 	import CategoriaTree from './CategoriaTree.svelte';
+	import { sweetalertApagar } from './funcoes/independentes/sweetalertApagar';
+	import { sweetalertEditar } from './funcoes/independentes/sweetalertEditar';
 	import { funcaoApagar } from './funcoes/store/funcaoApagar';
 	import { funcaoCheckbox } from './funcoes/store/funcaoCheckbox';
 	import { funcaoCriarSubcategoria } from './funcoes/store/funcaoCriarSubcategoria';
+	import { funcaoEditar } from './funcoes/store/funcaoEditar';
 	import { store } from './store.svelte';
 	import type { tipoGalho } from './tipoGalho';
 
@@ -45,25 +50,42 @@
 			/>
 			<span>{galho.campoNome}</span>
 		</Label>
-		<Button
-			size="xs"
-			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => {
-				funcaoApagar(galho);
-			}}
-		>
-			<Trash2 />
-		</Button>
-		<Button
-			size="xs"
-			class="cursor-pointer rounded border px-2 py-1 text-xs"
-			onclick={() => {
-				store.criandoEm = galho.idCategorias;
-				store.inputs[galho.idCategorias] = '';
-			}}
-		>
-			<Plus /> SUBCATEGORIA
-		</Button>
+		<ButtonGroup.Root>
+			<Button
+				size="xs"
+				class="cursor-pointer rounded border px-2 py-1 text-xs"
+				onclick={async () => {
+					const novoNome = await sweetalertEditar(galho.campoNome);
+					if (novoNome) {
+						funcaoEditar(galho, novoNome);
+					}
+				}}
+			>
+				<Pencil />
+			</Button>
+			<Button
+				size="xs"
+				class="cursor-pointer rounded border px-2 py-1 text-xs"
+				onclick={async () => {
+					const aux = await sweetalertApagar(galho.campoNome);
+					if (aux) {
+						funcaoApagar(galho);
+					}
+				}}
+			>
+				<Trash2 />
+			</Button>
+			<Button
+				size="xs"
+				class="cursor-pointer rounded border px-2 py-1 text-xs"
+				onclick={() => {
+					store.criandoEm = galho.idCategorias;
+					store.inputs[galho.idCategorias] = '';
+				}}
+			>
+				<Plus /> SUBCATEGORIA
+			</Button>
+		</ButtonGroup.Root>
 	</div>
 
 	{#if store.criandoEm === galho.idCategorias}
@@ -74,6 +96,7 @@
 			<Input
 				class="h-7 w-90 rounded border-2 border-slate-400 bg-white px-2 py-1 text-sm"
 				value={store.inputs[galho.idCategorias] ?? ''}
+				maxlength={tamanhos.categorias.campoNome}
 				oninput={(e) => {
 					store.inputs[galho.idCategorias] = (e.target as HTMLInputElement).value.toUpperCase();
 				}}

@@ -1,4 +1,4 @@
-import { tamanhosProdutos } from '$lib/constantes/schema/produtos';
+import { tamanhos } from '$lib/constantes/tamanhos';
 import { funcaoGerarSlug } from '$lib/funcoes/funcaoGerarSlug';
 import * as v from 'valibot';
 
@@ -10,11 +10,11 @@ export const schema = v.object({
 			v.trim(),
 			v.minLength(1, 'ESTE CAMPO É OBRIGATÓRIO.'),
 			v.maxLength(
-				tamanhosProdutos.campoNome,
-				`ESTE CAMPO DEVE TER NO MÁXIMO ${tamanhosProdutos.campoNome} CARACTERES.`,
+				tamanhos.produtos.campoNome,
+				`ESTE CAMPO DEVE TER NO MÁXIMO ${tamanhos.produtos.campoNome} CARACTERES.`,
 			),
 			v.check((arg) => {
-				return funcaoGerarSlug(arg).length < tamanhosProdutos.campoSlug;
+				return funcaoGerarSlug(arg).length < tamanhos.produtos.campoSlug;
 			}, 'CAMPO MUITO LONGO PARA GERAR O SLUG.'),
 		),
 		campoDescricao: v.pipe(

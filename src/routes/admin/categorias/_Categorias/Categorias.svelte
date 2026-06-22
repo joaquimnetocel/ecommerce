@@ -4,8 +4,8 @@
 	import { Plus } from '@lucide/svelte';
 	import CategoriaTree from './CategoriaTree.svelte';
 	import { deriveds } from './deriveds.svelte';
-	import { sweetalertCriarCategoria } from './funcoes/independentes/sweetalertCriarCategoria';
-	import { remotaCriarCategoria } from './funcoes/remotas/remotaCriarCategoria.remote';
+	import { sweetalertCriar } from './funcoes/independentes/sweetalertCriar';
+	import { remotaCriar } from './funcoes/remotas/remotaCriar.remote';
 	import { store } from './store.svelte';
 	import type { tipoCategorias } from './tipoCategorias';
 
@@ -37,9 +37,9 @@
 
 	<Button
 		onclick={async () => {
-			const digitado = await sweetalertCriarCategoria();
+			const digitado = await sweetalertCriar();
 			if (!digitado) return;
-			const inserido = await remotaCriarCategoria({
+			const inserido = await remotaCriar({
 				campoNome: digitado,
 				keyCategoriasPai: null,
 				idCategorias: undefined,
