@@ -1,6 +1,6 @@
 import { deriveds } from '../../deriveds.svelte';
 import { store } from '../../store.svelte';
-import { recursivaPegarTodosDescendentes } from '../independentes/recursivaPegarTodosDescendentes';
+import { recursivaColetarIdsDosFilhos } from '../independentes/recursivaColetarIdsDosFilhos';
 import { recursivaAtualizarPais } from './recursivaAtualizarPais';
 
 export function funcaoCheckbox(id: string) {
@@ -9,7 +9,7 @@ export function funcaoCheckbox(id: string) {
 	const marcado = store.selecionadas.has(id);
 	if (marcado) {
 		store.selecionadas.delete(id);
-		for (const d of recursivaPegarTodosDescendentes(galho)) {
+		for (const d of recursivaColetarIdsDosFilhos(galho)) {
 			store.selecionadas.delete(d);
 		}
 	} else {

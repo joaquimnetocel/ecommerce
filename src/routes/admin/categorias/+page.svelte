@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Categorias from '$lib/componentes/Categorias/Categorias.svelte';
 	import {
 		Card,
 		CardContent,
@@ -7,7 +8,6 @@
 		CardTitle,
 	} from '$lib/shadcn/componentes/ui/card';
 	import type { PageProps } from './$types';
-	import Categorias from './_Categorias/Categorias.svelte';
 
 	let { data }: PageProps = $props();
 </script>
