@@ -5,19 +5,19 @@ import { error } from '@sveltejs/kit';
 import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoCriarProduto({
-	dados,
+	formProdutos,
 	executor,
 }: {
 	executor: typeExecutor;
-	dados: typeSchemaOutput['formProdutos'];
+	formProdutos: typeSchemaOutput['formProdutos'];
 }) {
-	const { idProdutos, ...dadosSemId } = dados;
+	const { idProdutos, ...dadosSemId } = formProdutos;
 	if (idProdutos !== undefined) {
 		throw error(404, 'TENTANDO INSERIR UM PRODUTO COM ID');
 	}
 	const insercao = {
 		...dadosSemId,
-		campoSlug: funcaoGerarSlug(dados.campoNome),
+		campoSlug: funcaoGerarSlug(formProdutos.campoNome),
 	};
 	const [produtoCriado] = await executor.insert(tabelaProdutos).values(insercao).returning({
 		idProdutos: tabelaProdutos.idProdutos,

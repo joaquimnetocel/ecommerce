@@ -5,15 +5,15 @@ import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoCriarVariantes({
 	executor,
-	dados,
+	formVariantes,
 	keyProdutos,
 }: {
 	executor: typeExecutor;
-	dados: typeSchemaOutput['formVariantes'];
+	formVariantes: typeSchemaOutput['formVariantes'];
 	keyProdutos: string;
 }) {
 	await Promise.all(
-		dados.map(async (corrente) => {
+		formVariantes.map(async (corrente) => {
 			if (corrente.idVariantes === undefined) {
 				const campoSku = funcaoGerarSku();
 				const insercao = { ...corrente, keyProdutos, campoSku };

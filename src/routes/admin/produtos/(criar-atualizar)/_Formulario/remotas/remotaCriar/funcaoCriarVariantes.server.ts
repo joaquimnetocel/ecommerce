@@ -4,16 +4,16 @@ import type { typeExecutor } from '$lib/server/db/typeExecutor';
 import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoCriarVariantes({
-	dados,
+	formVariantes,
 	executor,
 	keyProdutos,
 }: {
 	executor: typeExecutor;
-	dados: typeSchemaOutput['formVariantes'];
+	formVariantes: typeSchemaOutput['formVariantes'];
 	keyProdutos: string;
 }) {
 	await Promise.all(
-		dados.map(async (corrente) => {
+		formVariantes.map(async (corrente) => {
 			if (corrente.idVariantes === undefined) {
 				const campoSku = funcaoGerarSku();
 				const variante = { ...corrente, keyProdutos, campoSku };

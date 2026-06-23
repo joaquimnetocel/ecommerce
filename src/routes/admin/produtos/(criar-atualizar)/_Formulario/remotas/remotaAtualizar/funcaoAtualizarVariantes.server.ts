@@ -5,13 +5,13 @@ import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoAtualizarVariantes({
 	executor,
-	dados,
+	formVariantes,
 }: {
 	executor: typeExecutor;
-	dados: typeSchemaOutput['formVariantes'];
+	formVariantes: typeSchemaOutput['formVariantes'];
 }) {
 	await Promise.all(
-		dados.map(async (corrente) => {
+		formVariantes.map(async (corrente) => {
 			const { idVariantes, ...atualizacao } = corrente;
 			if (idVariantes !== undefined) {
 				await executor

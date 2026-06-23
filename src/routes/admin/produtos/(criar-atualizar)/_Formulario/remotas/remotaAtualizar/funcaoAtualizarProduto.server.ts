@@ -7,18 +7,18 @@ import type { typeSchemaOutput } from '../../schema';
 
 export async function funcaoAtualizarProduto({
 	executor,
-	dados,
+	formProdutos,
 }: {
 	executor: typeExecutor;
-	dados: typeSchemaOutput['formProdutos'];
+	formProdutos: typeSchemaOutput['formProdutos'];
 }) {
-	const { idProdutos, ...dadosSemId } = dados;
+	const { idProdutos, ...dadosSemId } = formProdutos;
 	if (idProdutos === undefined) {
 		error(400, 'O ID DO PRODUTO É OBRIGATÓRIO PARA ATUALIZAR UM PRODUTO.');
 	}
 	const atualizacao = {
 		...dadosSemId,
-		campoSlug: funcaoGerarSlug(dados.campoNome),
+		campoSlug: funcaoGerarSlug(formProdutos.campoNome),
 	};
 	await executor
 		.update(tabelaProdutos)

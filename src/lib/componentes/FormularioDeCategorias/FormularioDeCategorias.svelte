@@ -23,7 +23,7 @@
 	} = $props();
 
 	$effect.pre(() => {
-		store.categorias = dados ?? [];
+		store.categorias = dados;
 		store.apenasMarcadas = apenasMarcadas;
 	});
 
