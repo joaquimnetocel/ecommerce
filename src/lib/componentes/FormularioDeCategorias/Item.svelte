@@ -108,7 +108,6 @@
 						store.criandoEm = null;
 					}
 				}}
-				autofocus
 			/>
 
 			<Button

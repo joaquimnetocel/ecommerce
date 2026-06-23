@@ -56,10 +56,12 @@
 		</div>
 		<FormularioDeVariantes {dados} />
 		<FormularioDeCategorias
-			marcadas={dados.inputs.formCategorias}
+			bind:marcadas={dados.inputs.formCategorias}
 			dados={dados.categorias}
 			apenasMarcadas={true}
 			verCheckboxes={true}
 		/>
 	</CardContent>
 </Card>
+
+{dados.inputs.formCategorias}
