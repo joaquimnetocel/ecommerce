@@ -4,7 +4,7 @@
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/shadcn/componentes/ui/card';
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Plus } from '@lucide/svelte';
-	import CategoriaTree from './Item.svelte';
+	import Item from './Item.svelte';
 	import { deriveds } from './deriveds.svelte';
 	import { funcaoCriarCategoria } from './store/funcaoCriarCategoria';
 	import { store } from './store/store.svelte';
@@ -12,19 +12,14 @@
 
 	let {
 		dados,
-		apenasMarcadas = false,
-		verCheckboxes,
 		selecionadas = $bindable([]),
 	}: {
-		verCheckboxes: boolean;
 		dados: tipoCategorias;
-		apenasMarcadas?: boolean;
 		selecionadas?: string[];
 	} = $props();
 
 	$effect.pre(() => {
 		store.categorias = dados;
-		store.apenasMarcadas = apenasMarcadas;
 	});
 
 	// 2. SINCRONIZAÇÃO DA ENTRADA (SÓ atualiza a store se o Pai mandar uma lista de IDs diferente de fora)
@@ -62,7 +57,8 @@
 		<div class="flex items-center justify-between">
 			<CardTitle>CATEGORIAS</CardTitle>
 			<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
-			<Button class="cursor-pointer" onclick={funcaoCriarCategoria}>CRIAR CATEGORIA</Button>
+			<Button class="cursor-pointer" onclick={funcaoCriarCategoria}><Plus /> CRIAR CATEGORIA</Button
+			>
 		</div>
 	</CardHeader>
 
@@ -74,18 +70,16 @@
 					bind:value={store.pesquisa}
 					placeholder="PESQUISAR CATEGORIA..."
 				/>
-				{#if verCheckboxes}
-					<label
-						class="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700 select-none"
-					>
-						<input
-							type="checkbox"
-							class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
-							bind:checked={store.apenasMarcadas}
-						/>
-						<span>VER APENAS MARCADAS</span>
-					</label>
-				{/if}
+				<label
+					class="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700 select-none"
+				>
+					<input
+						type="checkbox"
+						class="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
+						bind:checked={store.apenasMarcadas}
+					/>
+					<span>VER APENAS MARCADAS</span>
+				</label>
 			</div>
 		{/if}
 
@@ -95,14 +89,10 @@
 					<div class="text-center">NENHUMA CATEGORIA ENCONTRADA</div>
 				{:else}
 					{#each deriveds.arvoreFiltrada() as galho (galho.idCategorias)}
-						<CategoriaTree {galho} nivel={0} {verCheckboxes} />
+						<Item {galho} nivel={0} />
 					{/each}
 				{/if}
 			</ul>
-
-			<Button class="cursor-pointer" onclick={funcaoCriarCategoria}>
-				<Plus /> CRIAR CATEGORIA
-			</Button>
 		</div>
 	</CardContent>
 </Card>

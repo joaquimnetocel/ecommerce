@@ -1,4 +1,4 @@
-import { tabelaCategoriasProdutos, tabelaProdutos } from '$lib/server/db/schema';
+import { tabelaCategoriasProdutos } from '$lib/server/db/schema';
 import type { typeExecutor } from '$lib/server/db/typeExecutor';
 import { eq } from 'drizzle-orm';
 import type { typeSchemaOutput } from '../../schema';

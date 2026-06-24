@@ -1,6 +1,6 @@
 import type { typeErrosDeFormularios } from '$lib/types/typeErrosDeFormularios';
-import { funcaoLer } from './funcaoLer.server';
-import type { funcaoLerCategorias } from './funcaoLerCategorias.server';
+import { funcaoLer } from './funcoes/funcaoLer.server';
+import type { funcaoLerCategorias } from './funcoes/funcaoLerCategorias.server';
 import type { typeSchemaInput } from './schema';
 
 export type typeDados = {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import FormularioDeCategorias from '$lib/componentes/FormularioDeCategorias/FormularioDeCategorias.svelte';
 	import {
 		Card,
 		CardContent,
@@ -11,6 +10,7 @@
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { Textarea } from '$lib/shadcn/componentes/ui/textarea';
+	import FormularioDeCategorias from './FormularioDeCategorias/FormularioDeCategorias.svelte';
 	import FormularioDeVariantes from './FormularioDeVariantes.svelte';
 	import type { typeDados } from './typeDados';
 
@@ -56,12 +56,8 @@
 		</div>
 		<FormularioDeVariantes {dados} />
 		<FormularioDeCategorias
-			bind:marcadas={dados.inputs.formCategorias}
+			bind:selecionadas={dados.inputs.formCategorias}
 			dados={dados.categorias}
-			apenasMarcadas={true}
-			verCheckboxes={true}
 		/>
 	</CardContent>
 </Card>
-
-{dados.inputs.formCategorias}

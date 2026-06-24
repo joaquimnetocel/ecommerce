@@ -6,7 +6,7 @@ import { funcaoAtualizarVariantes } from './funcaoAtualizarVariantes.server';
 import { funcaoCriarCategorias } from './funcaoCriarCategorias.server';
 import { funcaoCriarVariantes } from './funcaoCriarVariantes.server';
 
-export const funcaoRemotaAtualizar = command(
+export const remotaAtualizar = command(
 	schema,
 	async ({ formProdutos, formVariantes, formCategorias }) => {
 		await db.transaction(async (tx) => {

@@ -2,11 +2,11 @@ import { funcaoErrosDoFormulario } from '$lib/funcoes/funcaoErrosDoFormulario';
 import { sweetalertErro } from '$lib/sweetalerts/sweetalertErro';
 import Swal from 'sweetalert2';
 import * as v from 'valibot';
+import { schema } from '../schema';
+import type { typeDados } from '../typeDados';
 import { funcaoVoltar } from './funcaoVoltar';
-import { funcaoRemotaAtualizar } from './remotas/remotaAtualizar/remotaAtualizar.remote';
-import { funcaoRemotaCriar } from './remotas/remotaCriar/remotaCriar.remote';
-import { schema } from './schema';
-import type { typeDados } from './typeDados';
+import { remotaAtualizar } from './remotaAtualizar/remotaAtualizar.remote';
+import { remotaCriar } from './remotaCriar/remotaCriar.remote';
 
 export async function funcaoSubmeter(dados: typeDados) {
 	Swal.fire({
@@ -21,9 +21,9 @@ export async function funcaoSubmeter(dados: typeDados) {
 		dados.erros = {};
 		try {
 			if (dados.inputs.formProdutos.idProdutos === undefined) {
-				await funcaoRemotaCriar(dados.inputs);
+				await remotaCriar(dados.inputs);
 			} else {
-				await funcaoRemotaAtualizar(dados.inputs);
+				await remotaAtualizar(dados.inputs);
 			}
 			funcaoVoltar(dados.lido?.campoAtivo);
 		} catch (erro) {

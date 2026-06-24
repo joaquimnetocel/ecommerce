@@ -5,7 +5,7 @@ import { funcaoCriarCategorias } from './funcaoCriarCategorias.server';
 import { funcaoCriarProduto } from './funcaoCriarProduto.server';
 import { funcaoCriarVariantes } from './funcaoCriarVariantes.server';
 
-export const funcaoRemotaCriar = command(
+export const remotaCriar = command(
 	schema,
 	async ({ formProdutos, formVariantes, formCategorias }) => {
 		console.log(formCategorias);

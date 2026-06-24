@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Button } from '$lib/shadcn/componentes/ui/button';
 	import FormularioDeProdutos from './FormularioDeProdutos.svelte';
-	import { funcaoSubmeter } from './funcaoSubmeter';
-	import { funcaoVoltar } from './funcaoVoltar';
+	import { funcaoSubmeter } from './funcoes/funcaoSubmeter';
+	import { funcaoVoltar } from './funcoes/funcaoVoltar';
 	import type { typeDados } from './typeDados';
 
 	let { data }: { data: typeDados } = $props();
