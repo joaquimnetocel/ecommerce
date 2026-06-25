@@ -5,6 +5,7 @@ type typeFormProdutos = typeSchemaInput['formProdutos'];
 type typeFormCategorias = typeSchemaInput['formCategorias'];
 type typeFormVariantes = typeSchemaInput['formVariantes'];
 type typeVariante = typeFormVariantes[number];
+type typeFormImagens = typeSchemaInput['formImagens'];
 
 export function funcaoCriarInputs(lido: Exclude<typeDados['lido'], undefined>): typeSchemaInput {
 	const formProdutos: typeFormProdutos = {
@@ -25,8 +26,10 @@ export function funcaoCriarInputs(lido: Exclude<typeDados['lido'], undefined>): 
 	const formCategorias: typeFormCategorias = lido.relCategoriasProdutos.map((corrente) => {
 		return corrente.keyCategorias;
 	});
+	const formImagens: typeFormImagens = lido.relImagens;
 
 	return {
+		formImagens,
 		formProdutos,
 		formVariantes,
 		formCategorias,

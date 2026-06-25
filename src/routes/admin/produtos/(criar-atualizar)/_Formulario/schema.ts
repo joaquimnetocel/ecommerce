@@ -64,10 +64,7 @@ export const schema = v.object({
 				v.minLength(1, 'O tipo da imagem é obrigatório.'),
 				v.startsWith('image/', 'O arquivo selecionado deve ser uma imagem válida.'),
 			),
-			campoOrdem: v.optional(
-				v.pipe(v.number(), v.integer('A ordem precisa ser um número inteiro.')),
-				0, // Valor padrão se omitido
-			),
+			campoOrdem: v.pipe(v.number(), v.integer('A ordem precisa ser um número inteiro.')),
 		}),
 	),
 });

@@ -5,43 +5,50 @@
 	import { Button } from '$lib/shadcn/componentes/ui/button/index.js';
 	import { ArrowLeft, ArrowRight, CloudUpload, X } from '@lucide/svelte';
 	import Swal from 'sweetalert2';
+	import type { typeDados } from '../typeDados';
 
-	let { url }: { url: string } = $props();
+	let { url, dados }: { url: string; dados: typeDados } = $props();
 
-	// let estadosParaEach = $state(
-	// 	dados.inputs.formVariantes.map((_, contador) => ({
-	// 		id: crypto.randomUUID(),
-	// 		open: contador === 0 && dados.inputs.formVariantes.length === 1,
-	// 	})),
-	// );
-
-	// const variantesRenderizadas = $derived(
-	// 	dados.inputs.formVariantes
-	// 		.map((variante, contadorOriginal) => ({
-	// 			estado: estadosParaEach[contadorOriginal],
-	// 			variante,
-	// 			contadorOriginal,
-	// 		}))
-	// 		.reverse(),
-	// );
-
-	interface tipoImagem {
+	type tipoImagem = {
 		id: string;
-		campoNome: string;
-		campoTamanho: number;
-		campoTipo: string;
-		campoOrdem: number;
+		nome: string;
+		tamanho: number;
+		tipo: string;
+		ordem: number;
 		preview: string;
-	}
+	};
 
-	let imagens = $state<tipoImagem[]>([]);
+	// svelte-ignore state_referenced_locally
+	const constImagems: tipoImagem[] = dados.inputs.formImagens.map((current) => {
+		return {
+			id: crypto.randomUUID(),
+			nome: current.campoNome,
+			ordem: current.campoOrdem,
+			tamanho: current.campoTamanho,
+			tipo: current.campoTipo,
+			preview: `${PUBLIC_URL_DE_IMAGENS}/externos/${PUBLIC_LOJA}/${url}/${current.campoNome}`,
+		};
+	});
+
+	let imagens = $state<tipoImagem[]>(constImagems);
 	let fileInput = $state<HTMLInputElement>();
+
+	$effect(() => {
+		dados.inputs.formImagens = imagens.map((corrente) => {
+			return {
+				campoNome: corrente.nome,
+				campoOrdem: corrente.ordem,
+				campoTamanho: corrente.tamanho,
+				campoTipo: corrente.tipo,
+			};
+		});
+	});
 
 	// Garante que o array físico fique ordenado sequencialmente por índice
 	function normalizarOrdens(lista: tipoImagem[]): tipoImagem[] {
 		return lista.map((img, index) => ({
 			...img,
-			campoOrdem: index,
+			ordem: index,
 		}));
 	}
 
@@ -74,17 +81,16 @@
 
 			const proximaOrdemInicial = imagens.length;
 
-			const novosArquivos: tipoImagem[] = Array.from(files).map((file, index) => ({
+			const novasImagens: tipoImagem[] = Array.from(files).map((file, index) => ({
 				id: crypto.randomUUID(),
 				preview: URL.createObjectURL(file),
-				campoNome: file.name,
-				campoTamanho: file.size,
-				campoTipo: file.type,
-				campoOrdem: proximaOrdemInicial + index,
+				nome: file.name,
+				tamanho: file.size,
+				tipo: file.type,
+				ordem: proximaOrdemInicial + index,
 			}));
 
-			// IMPORTANTE: Adiciona e já normaliza para manter o estado limpo
-			imagens = normalizarOrdens([...imagens, ...novosArquivos]);
+			imagens = normalizarOrdens([...imagens, ...novasImagens]);
 		}
 
 		if (fileInput) fileInput.value = '';
@@ -194,7 +200,7 @@
 						</Button>
 
 						<span class="rounded bg-primary/80 px-1.5 text-[10px] font-bold text-white">
-							Ordem: {img.campoOrdem}
+							Ordem: {img.ordem}
 						</span>
 
 						<Button
@@ -213,6 +219,6 @@
 	{/if}
 </div>
 
-<pre>
+<!-- <pre>
     {JSON.stringify(imagens, null, 2)}
-</pre>
+</pre> -->

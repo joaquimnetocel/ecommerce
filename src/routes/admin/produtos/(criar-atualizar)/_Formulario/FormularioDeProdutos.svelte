@@ -60,6 +60,9 @@
 			bind:selecionadas={dados.inputs.formCategorias}
 			dados={dados.categorias}
 		/>
-		<FormularioDeImagens url="imagens/produtos" />
+		<FormularioDeImagens url="imagens/produtos" {dados} />
 	</CardContent>
 </Card>
+<pre>
+	{JSON.stringify(dados.inputs.formImagens, null, 2)}
+</pre>

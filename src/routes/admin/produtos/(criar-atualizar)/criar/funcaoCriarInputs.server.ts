@@ -3,6 +3,7 @@ import type { typeSchemaInput } from '../_Formulario/schema';
 type typeFormProdutos = typeSchemaInput['formProdutos'];
 type typeFormVariantes = typeSchemaInput['formVariantes'];
 type typeFormCategorias = typeSchemaInput['formCategorias'];
+type typeFormImagens = typeSchemaInput['formImagens'];
 
 export function funcaoCriarInputs(): typeSchemaInput {
 	const formProdutos: typeFormProdutos = {
@@ -21,10 +22,12 @@ export function funcaoCriarInputs(): typeSchemaInput {
 		},
 	];
 	const formCategorias: typeFormCategorias = [];
+	const formImagens: typeFormImagens = [];
 
 	return {
 		formCategorias,
 		formProdutos,
 		formVariantes,
+		formImagens,
 	};
 }
