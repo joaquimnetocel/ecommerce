@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { PUBLIC_LOJA, PUBLIC_URL_DE_IMAGENS } from '$env/static/public';
-	import { funcaoImagemExiste } from '$lib/funcoes/funcaoImagemExiste';
 	import { Button } from '$lib/shadcn/componentes/ui/button/index.js';
 	import { ArrowLeft, ArrowRight, CloudUpload, X } from '@lucide/svelte';
 	import Swal from 'sweetalert2';
 	import type { typeDados } from '../typeDados';
+	import { funcaoImagemExiste } from './funcaoImagemExiste';
 
-	let { url, dados }: { url: string; dados: typeDados } = $props();
+	let { caminhoNoServidor, dados }: { caminhoNoServidor: string; dados: typeDados } = $props();
 
 	type tipoImagem = {
 		id: string;
@@ -26,7 +25,7 @@
 			ordem: current.campoOrdem,
 			tamanho: current.campoTamanho,
 			tipo: current.campoTipo,
-			preview: `${PUBLIC_URL_DE_IMAGENS}/externos/${PUBLIC_LOJA}/${url}/${current.campoNome}`,
+			preview: `${PUBLIC_URL_DE_IMAGENS}/externos/${PUBLIC_LOJA}/${caminhoNoServidor}/${current.campoNome}`,
 		};
 	});
 
@@ -53,15 +52,13 @@
 	}
 
 	async function handleFileChange(event: Event) {
-		if (!browser) return;
-
 		const target = event.target as HTMLInputElement;
 		const files = target.files;
 
 		if (files) {
 			const promisesDeImagensExistentes = Array.from(files).map(async (file) => {
 				return await funcaoImagemExiste(
-					`${PUBLIC_URL_DE_IMAGENS}/externos/${PUBLIC_LOJA}/${url}/${file.name}`,
+					`${PUBLIC_URL_DE_IMAGENS}/externos/${PUBLIC_LOJA}/${caminhoNoServidor}/${file.name}`,
 				);
 			});
 			const arrayResultadosDasPromises = await Promise.all(promisesDeImagensExistentes);
@@ -97,8 +94,6 @@
 	}
 
 	function removerImagem(id: string, previewUrl: string) {
-		if (!browser) return;
-
 		const listaFiltrada = imagens.filter((img) => img.id !== id);
 		imagens = normalizarOrdens(listaFiltrada);
 
@@ -200,7 +195,7 @@
 						</Button>
 
 						<span class="rounded bg-primary/80 px-1.5 text-[10px] font-bold text-white">
-							Ordem: {img.ordem}
+							Ordem: {img.ordem + 1}
 						</span>
 
 						<Button

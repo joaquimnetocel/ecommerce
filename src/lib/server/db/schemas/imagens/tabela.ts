@@ -12,6 +12,5 @@ export const tabelaImagens = pgTable('tabelaImagens', {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		}),
-	campoUrl: text().notNull(),
 	campoOrdem: integer().default(0).notNull(),
 });

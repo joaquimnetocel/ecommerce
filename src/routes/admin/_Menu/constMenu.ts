@@ -36,18 +36,18 @@ export const constMenu: typeItemDoMenu[] = [
 		],
 	},
 	{
-		id: 'banco',
-		type: 'link',
-		title: 'BANDO DE DADOS',
-		url: '/admin/banco',
-		icon: Database,
-	},
-	{
 		id: 'categorias',
 		type: 'link',
 		title: 'CATEGORIAS',
 		url: '/admin/categorias',
 		icon: Settings2,
+	},
+	{
+		id: 'banco',
+		type: 'link',
+		title: 'BANDO DE DADOS',
+		url: '/admin/banco',
+		icon: Database,
 	},
 	{
 		id: 'exemplo',

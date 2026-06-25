@@ -55,14 +55,11 @@
 				{dados.inputs.formProdutos.campoAtivo ? 'ATIVO' : 'INATIVO'}
 			</Label>
 		</div>
+		<FormularioDeImagens caminhoNoServidor="imagens/produtos" {dados} />
 		<FormularioDeVariantes {dados} />
 		<FormularioDeCategorias
 			bind:selecionadas={dados.inputs.formCategorias}
 			dados={dados.categorias}
 		/>
-		<FormularioDeImagens url="imagens/produtos" {dados} />
 	</CardContent>
 </Card>
-<pre>
-	{JSON.stringify(dados.inputs.formImagens, null, 2)}
-</pre>
