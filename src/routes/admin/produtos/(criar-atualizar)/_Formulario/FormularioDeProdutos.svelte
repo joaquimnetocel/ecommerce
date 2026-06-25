@@ -11,6 +11,7 @@
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { Textarea } from '$lib/shadcn/componentes/ui/textarea';
 	import FormularioDeCategorias from './FormularioDeCategorias/FormularioDeCategorias.svelte';
+	import FormularioDeImagens from './FormularioDeImagens/FormularioDeImagens.svelte';
 	import FormularioDeVariantes from './FormularioDeVariantes.svelte';
 	import type { typeDados } from './typeDados';
 
@@ -59,5 +60,6 @@
 			bind:selecionadas={dados.inputs.formCategorias}
 			dados={dados.categorias}
 		/>
+		<FormularioDeImagens url="imagens/produtos" />
 	</CardContent>
 </Card>

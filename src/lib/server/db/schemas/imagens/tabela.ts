@@ -3,6 +3,9 @@ import { tabelaProdutos } from '../produtos/tabela';
 
 export const tabelaImagens = pgTable('tabelaImagens', {
 	idImagens: uuid().defaultRandom().primaryKey(),
+	campoNome: text().notNull(),
+	campoTamanho: integer().notNull(),
+	campoTipo: text().notNull(),
 	keyProdutos: uuid()
 		.notNull()
 		.references(() => tabelaProdutos.idProdutos, {

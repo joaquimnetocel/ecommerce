@@ -8,6 +8,7 @@ export async function funcaoLer(parId: string) {
 		where: eq(tabelaProdutos.idProdutos, parId),
 		with: {
 			relVariantes: true,
+			relImagens: true,
 			relCategoriasProdutos: {
 				with: {
 					relCategoria: true,

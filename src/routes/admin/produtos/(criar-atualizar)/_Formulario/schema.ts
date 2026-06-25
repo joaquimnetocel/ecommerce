@@ -50,6 +50,26 @@ export const schema = v.object({
 		v.minLength(1, 'O PRODUTO DEVE POSSUIR AO MENOS UMA VARIANTE.'),
 	),
 	formCategorias: v.array(v.pipe(v.string(), v.uuid('ID DA CATEGORIA INVÁLIDO.'))),
+	formImagens: v.array(
+		v.object({
+			idImagens: v.optional(v.pipe(v.string(), v.uuid())),
+			campoNome: v.pipe(v.string(), v.minLength(1, 'O nome do arquivo é obrigatório.')),
+			campoTamanho: v.pipe(
+				v.number(),
+				v.integer('O tamanho deve ser um número inteiro.'),
+				v.minValue(1, 'O arquivo não pode estar vazio.'),
+			),
+			campoTipo: v.pipe(
+				v.string(),
+				v.minLength(1, 'O tipo da imagem é obrigatório.'),
+				v.startsWith('image/', 'O arquivo selecionado deve ser uma imagem válida.'),
+			),
+			campoOrdem: v.optional(
+				v.pipe(v.number(), v.integer('A ordem precisa ser um número inteiro.')),
+				0, // Valor padrão se omitido
+			),
+		}),
+	),
 });
 
 export type typeSchemaInput = v.InferInput<typeof schema>;
