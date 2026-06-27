@@ -27,6 +27,10 @@ export const tabelaVariantes = pgTable(
 			precision: 12,
 			scale: 2,
 		}).notNull(),
+		campoPrecoCheio: numeric({
+			precision: 12,
+			scale: 2,
+		}),
 		campoEstoque: integer().notNull(),
 		campoAtivo: boolean().notNull().default(true),
 		campoCriadoEm: timestamp().defaultNow().notNull(),
