@@ -1,61 +1,71 @@
 <script lang="ts">
-	import { carrinho } from '$lib/stores/carrinho.svelte';
+	// import { funcaoGerarSku } from '$lib/funcoes/funcaoGerarSku';
+	import { funcaoGerarSlug } from '$lib/funcoes/funcaoGerarSlug';
+	import { funcaoAdicionarItem } from '$lib/stores/storeCarrinho/actions/funcaoAdicionarItem';
+	import { funcaoAumentarQuantidade } from '$lib/stores/storeCarrinho/actions/funcaoAumentarQuantidade';
+	import { funcaoDiminuirQuantidade } from '$lib/stores/storeCarrinho/actions/funcaoDiminuirQuantidade';
+	import { funcaoRemoverItem } from '$lib/stores/storeCarrinho/actions/funcaoRemoverItem';
+	import {
+		derivedPrecoTotalSemDesconto,
+		derivedQuantidadeTotalNocarrinho,
+	} from '$lib/stores/storeCarrinho/deriveds.svelte';
+	import { storeCarrinho } from '$lib/stores/storeCarrinho/storeCarrinho.svelte';
 
-	function adicionarProdutoSimples() {
-		carrinho.adicionar({
-			idDaVariante: 1,
-			idDoProduto: 1,
-			sku: 'NOTEBOOK-001',
-			nome: 'Notebook Dell',
-			preco: 3500,
-			imagem: '/notebook.jpg',
-			estoque: 5,
-		});
-	}
-
-	function adicionarProdutoComVariacao() {
-		carrinho.adicionar({
-			idDaVariante: 15,
-			idDoProduto: 2,
-			sku: 'CAM-PRETA-G',
-			nome: 'Camiseta Básica',
-			preco: 99.9,
-			imagem: '/camiseta.jpg',
-			estoque: 10,
-			precoCheio: 129.9,
-		});
-	}
+	const idVariantes = '4f3a9b2c-1d5e-4b7f-a9c8-2e1d0f3a4b5c'; //crypto.randomUUID();
+	const idProdutos = '4f3a9b2c-1d5e-4b7f-a9c8-2e1d0f3a4b5c'; //crypto.randomUUID();
+	const campoSku = 'aa'; //funcaoGerarSku();
 </script>
 
-<button onclick={adicionarProdutoSimples}> Adicionar notebook </button>
-
-<button onclick={adicionarProdutoComVariacao}> Adicionar camiseta </button>
+<button
+	onclick={() => {
+		funcaoAdicionarItem({
+			novoItem: {
+				tabelaVariantes: {
+					idVariantes,
+					campoEstoque: 5,
+					campoPreco: 3500,
+					campoPrecoCheio: 3500,
+					campoSku,
+				},
+				tabelaProdutos: {
+					campoNome: 'Notebook Dell',
+					campoSlug: funcaoGerarSlug('Notebook Dell'),
+					idProdutos: idProdutos,
+				},
+				imagem: '/notebook.jpg',
+				quantidade: 1,
+			},
+		});
+	}}
+>
+	Adicionar notebook
+</button>
 
 <hr />
 
-{#if carrinho.itens.length === 0}
+{#if storeCarrinho.itens.length === 0}
 	<p>Carrinho vazio</p>
 {:else}
-	{#each carrinho.itens as item (item.idDoProduto)}
+	{#each storeCarrinho.itens as item (item.tabelaVariantes.idVariantes)}
 		<div>
-			<img src={item.imagem} alt={item.nome} width="120" />
+			<img src={item.imagem} alt={item.tabelaProdutos.campoNome} width="120" />
 
-			<h2>{item.nome}</h2>
+			<h2>{item.tabelaProdutos.campoNome}</h2>
 
 			<p>
 				SKU:
-				{item.sku}
+				{item.tabelaVariantes.campoSku}
 			</p>
 
-			{#if item.descricaoDaVariante}
+			<!-- {#if item.tabelaVariantes.}
 				<p>
 					{item.descricaoDaVariante}
 				</p>
-			{/if}
+			{/if} -->
 
 			<p>
 				Preço: R$
-				{item.preco.toFixed(2)}
+				{item.tabelaVariantes.campoPreco.toFixed(2)}
 			</p>
 
 			<p>
@@ -63,11 +73,32 @@
 				{item.quantidade}
 			</p>
 
-			<button onclick={() => carrinho.diminuirQuantidade(item.idDaVariante)}> - </button>
+			<button
+				onclick={() =>
+					funcaoDiminuirQuantidade({
+						idVariantes: item.tabelaVariantes.idVariantes,
+					})}
+			>
+				-
+			</button>
 
-			<button onclick={() => carrinho.aumentarQuantidade(item.idDaVariante)}> + </button>
+			<button
+				onclick={() =>
+					funcaoAumentarQuantidade({
+						idVariantes: item.tabelaVariantes.idVariantes,
+					})}
+			>
+				+
+			</button>
 
-			<button onclick={() => carrinho.removerItem(item.idDaVariante)}> Remover </button>
+			<button
+				onclick={() =>
+					funcaoRemoverItem({
+						idVariantes: item.tabelaVariantes.idVariantes,
+					})}
+			>
+				Remover
+			</button>
 
 			<hr />
 		</div>
@@ -75,22 +106,22 @@
 
 	<h2>
 		Subtotal: R$
-		{carrinho.precoTotalSemFrete.toFixed(2)}
+		{derivedPrecoTotalSemDesconto().toFixed(2)}
 	</h2>
 
 	<p>
 		Quantidade total:
-		{carrinho.quantidadeTotalDeItens}
+		{derivedQuantidadeTotalNocarrinho()}
 	</p>
 
 	<p>
 		Produtos distintos:
-		{carrinho.itens.length}
+		{storeCarrinho.itens.length}
 	</p>
 
-	<p>
+	<!-- <p>
 		Total com frete de R$ 20: R$
 		{carrinho.calcularTotalComFrete(20).toFixed(2)}
-	</p>
+	</p> -->
 {/if}
 aaa

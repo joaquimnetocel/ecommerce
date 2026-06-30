@@ -16,3 +16,6 @@ export const schemaItem = v.object({
 	imagem: v.string(),
 	quantidade: v.pipe(v.number(), v.integer(), v.minValue(1)),
 });
+
+export type tipoSchemaItemInput = v.InferInput<typeof schemaItem>;
+export type tipoSchemaItemOutput = v.InferOutput<typeof schemaItem>;

@@ -1,12 +1,31 @@
+import Swal from 'sweetalert2';
 import { funcaoEncontrarItem } from './funcaoEncontrarItem';
-import { funcaoRemoverItem } from './funcaoRemoverItem';
 
 export function funcaoDiminuirQuantidade({ idVariantes }: { idVariantes: string }) {
-	const item = funcaoEncontrarItem({ idVariantes });
-	if (!item) return;
-	if (item.quantidade <= 1) {
-		funcaoRemoverItem({ idVariantes });
+	const proxyItem = funcaoEncontrarItem({ idVariantes });
+	if (proxyItem === undefined) {
+		Swal.fire({
+			icon: 'error',
+			title: 'ERRO',
+			text: `Tentando diminuir a quantidade de um item, mas o item não foi encontrado no carrinho.`,
+		});
 		return;
 	}
-	item.quantidade -= 1;
+	if (proxyItem.quantidade < 0) {
+		Swal.fire({
+			icon: 'error',
+			title: 'ERRO',
+			text: `Tentando atribuir quantidade negativa ao carrinho.`,
+		});
+		return;
+	}
+	if (proxyItem.quantidade === 1) {
+		Swal.fire({
+			icon: 'error',
+			title: 'ERRO',
+			text: `Tentando reduzir uma quantidade no carrinho para zero.`,
+		});
+		return;
+	}
+	proxyItem.quantidade -= 1;
 }

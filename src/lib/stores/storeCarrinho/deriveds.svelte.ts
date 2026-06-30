@@ -20,8 +20,6 @@ const quantidadeTotalNocarrinho = $derived(
 	}, 0),
 );
 
-export const deriveds = {
-	precoTotalSemDesconto: () => precoTotalSemDesconto,
-	precoTotal: () => precoTotal,
-	quantidadeTotalNocarrinho: () => quantidadeTotalNocarrinho,
-};
+export const derivedPrecoTotalSemDesconto = () => precoTotalSemDesconto;
+export const derivedPrecoTotal = () => precoTotal;
+export const derivedQuantidadeTotalNocarrinho = () => quantidadeTotalNocarrinho;

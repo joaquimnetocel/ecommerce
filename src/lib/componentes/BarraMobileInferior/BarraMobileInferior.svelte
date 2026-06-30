@@ -7,7 +7,14 @@
 	import { Button } from '$lib/shadcn/componentes/ui/button';
 	import { Separator } from '$lib/shadcn/componentes/ui/separator';
 	import { cn } from '$lib/shadcn/utils';
-	import { carrinho } from '$lib/stores/carrinho.svelte';
+	import { funcaoAumentarQuantidade } from '$lib/stores/storeCarrinho/actions/funcaoAumentarQuantidade';
+	import { funcaoDiminuirQuantidade } from '$lib/stores/storeCarrinho/actions/funcaoDiminuirQuantidade';
+	import { funcaoRemoverItem } from '$lib/stores/storeCarrinho/actions/funcaoRemoverItem';
+	import {
+		derivedPrecoTotal,
+		derivedQuantidadeTotalNocarrinho,
+	} from '$lib/stores/storeCarrinho/deriveds.svelte';
+	import { storeCarrinho } from '$lib/stores/storeCarrinho/storeCarrinho.svelte';
 	import {
 		ArrowLeft,
 		Heart,
@@ -88,11 +95,11 @@
 				>
 					<div class="relative">
 						<item.icon size={24} />
-						{#if carrinho.itens.length > 0}
+						{#if storeCarrinho.itens.length > 0}
 							<span
 								class="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white"
 							>
-								{carrinho.quantidadeTotalDeItens}
+								{derivedQuantidadeTotalNocarrinho()}
 							</span>
 						{/if}
 					</div>
@@ -117,17 +124,19 @@
 			</header>
 
 			<div class="flex-1 overflow-auto p-4">
-				{#if carrinho.itens.length}
+				{#if storeCarrinho.itens.length}
 					<div class="space-y-4">
-						{#each carrinho.itens as item, i (i)}
+						{#each storeCarrinho.itens as item, i (i)}
 							<div class="flex items-center gap-4 rounded-lg border p-4">
 								<a
-									href={resolve(`/produto/${item.idDoProduto}/${item.slug}`)}
+									href={resolve(
+										`/produto/${item.tabelaProdutos.idProdutos}/${item.tabelaProdutos.campoSlug}`,
+									)}
 									onclick={() => (estadoCarrinhoVisivel = false)}
 								>
 									<LazyImg
 										src={item.imagem}
-										alt={item.nome}
+										alt={item.tabelaProdutos.campoNome}
 										width={30}
 										height={20}
 										class="rounded-md object-cover"
@@ -135,18 +144,23 @@
 								</a>
 								<div class="flex-1">
 									<a
-										href={resolve(`/produto/${item.idDoProduto}/${item.slug}`)}
+										href={resolve(
+											`/produto/${item.tabelaProdutos.idProdutos}/${item.tabelaProdutos.campoSlug}`,
+										)}
 										onclick={() => (estadoCarrinhoVisivel = false)}
 									>
 										<h3 class="font-medium">
-											{item.nome}
+											{item.tabelaProdutos.campoNome}
 										</h3>
 									</a>
 									<div class="mt-2 flex items-center justify-between">
 										<div class="flex items-center gap-2">
 											<button
 												class="cursor-pointer rounded-full p-1 hover:bg-gray-100"
-												onclick={() => carrinho.diminuirQuantidade(item.idDaVariante)}
+												onclick={() =>
+													funcaoDiminuirQuantidade({
+														idVariantes: item.tabelaVariantes.idVariantes,
+													})}
 											>
 												<Minus size={16} />
 											</button>
@@ -159,14 +173,20 @@
 											</span>
 											<button
 												class="cursor-pointer rounded-full p-1 hover:bg-gray-100"
-												onclick={() => carrinho.aumentarQuantidade(item.idDaVariante)}
+												onclick={() =>
+													funcaoAumentarQuantidade({
+														idVariantes: item.tabelaVariantes.idVariantes,
+													})}
 											>
 												<Plus size={16} />
 											</button>
 										</div>
 										<button
 											class="cursor-pointer text-red-500 hover:text-red-600"
-											onclick={() => carrinho.removerItem(item.idDaVariante)}
+											onclick={() =>
+												funcaoRemoverItem({
+													idVariantes: item.tabelaVariantes.idVariantes,
+												})}
 										>
 											<Trash2 size={20} />
 										</button>
@@ -190,12 +210,12 @@
 				{/if}
 			</div>
 
-			{#if carrinho.itens.length}
+			{#if storeCarrinho.itens.length}
 				<div class="border-t bg-white p-4">
 					<div class="space-y-4">
 						<div class="flex justify-between text-sm">
 							<span>SUBTOTAL</span>
-							<span>{funcaoFormatarPreco(carrinho.precoTotalSemFrete)}</span>
+							<span>{funcaoFormatarPreco(derivedPrecoTotal())}</span>
 						</div>
 						<div class="flex justify-between text-sm">
 							<span>ENTREGA</span>
@@ -204,7 +224,7 @@
 						<Separator />
 						<div class="flex justify-between font-medium">
 							<span>TOTAL</span>
-							<span>{funcaoFormatarPreco(carrinho.precoTotalSemFrete)}</span>
+							<span>{funcaoFormatarPreco(derivedPrecoTotal())}</span>
 						</div>
 						<Button
 							class="w-full cursor-pointer"

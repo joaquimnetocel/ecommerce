@@ -1,5 +1,5 @@
-import { randomUUID } from 'crypto';
+// import { randomUUID } from 'crypto';
 
 export function funcaoGerarSku() {
-	return `SKU-${randomUUID().slice(0, 8).toUpperCase()}`;
+	return `SKU-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 }
