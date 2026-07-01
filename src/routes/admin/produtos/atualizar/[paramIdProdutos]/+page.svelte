@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Formulario from '$lib/componentes/admin/produtos/FormularioDeProdutos/Formulario.svelte';
+	import Formulario from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/Formulario.svelte';
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();

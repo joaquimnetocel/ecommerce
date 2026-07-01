@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { PUBLIC_LOJA } from '$env/static/public';
-	import WhatsappChat from '$lib/componentes/WhatsappChat.svelte';
+	import WhatsappChat from '$lib/componentes/compartilhados/WhatsappChat.svelte';
 	import { funcaoConfiguracoes } from '$lib/configuracoes/funcaoConfiguracoes';
 	import masterCard from '$lib/imagens/metodosDePagamento/mastercard.png';
 	import paypal from '$lib/imagens/metodosDePagamento/paypal.png';

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import LazyImg from '$lib/componentes/LazyImage.svelte';
+	import LazyImg from '$lib/componentes/compartilhados/LazyImage.svelte';
 	import { funcaoFormatarPreco } from '$lib/funcoes/funcaoFormatarPreco';
 	import { Button } from '$lib/shadcn/componentes/ui/button';
 	import { Separator } from '$lib/shadcn/componentes/ui/separator';

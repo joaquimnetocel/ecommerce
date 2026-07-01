@@ -1,5 +1,5 @@
-import { funcaoLer } from '../../_Formulario/funcoes/funcaoLer.server';
-import { funcaoLerCategorias } from '../../_Formulario/funcoes/funcaoLerCategorias.server';
+import { funcaoLer } from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/funcoes/funcaoLer.server';
+import { funcaoLerCategorias } from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/funcoes/funcaoLerCategorias.server';
 import type { PageServerLoad } from './$types';
 import { funcaoCriarInputs } from './funcaoCriarInputs.server';
 

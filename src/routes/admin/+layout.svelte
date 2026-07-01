@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Menu from '$lib/componentes/admin/Menu/index.svelte';
+	import Menu from '$lib/componentes/especificosParaRotas//admin/Menu/index.svelte';
 	import * as Sidebar from '$lib/shadcn/componentes/ui/sidebar/index.js';
-	import './_css/formularios.css';
+	import './formularios.css';
 
 	let { children } = $props();
 </script>

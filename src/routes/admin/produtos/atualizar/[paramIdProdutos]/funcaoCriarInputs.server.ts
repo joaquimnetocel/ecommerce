@@ -1,5 +1,5 @@
-import type { typeSchemaInput } from '$lib/componentes/admin/produtos/FormularioDeProdutos/schema';
-import type { typeDados } from '$lib/componentes/admin/produtos/FormularioDeProdutos/typeDados';
+import type { typeSchemaInput } from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/schema';
+import type { typeDados } from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/typeDados';
 
 type typeFormProdutos = typeSchemaInput['formProdutos'];
 type typeFormCategorias = typeSchemaInput['formCategorias'];
