@@ -6,7 +6,8 @@
 	import type { typeDados } from '../typeDados';
 	import { funcaoImagemExiste } from './funcaoImagemExiste';
 
-	let { caminhoNoServidor, dados }: { caminhoNoServidor: string; dados: typeDados } = $props();
+	let { caminhoNoServidor, dados = $bindable() }: { caminhoNoServidor: string; dados: typeDados } =
+		$props();
 
 	type tipoImagem = {
 		id: string;
@@ -17,7 +18,6 @@
 		preview: string;
 	};
 
-	// svelte-ignore state_referenced_locally
 	const constImagems: tipoImagem[] = dados.inputs.formImagens.map((current) => {
 		return {
 			id: crypto.randomUUID(),

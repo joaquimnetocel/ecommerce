@@ -82,27 +82,24 @@
 							bind:value={atributoCorrente.chave}
 							placeholder="Ex: COR, TAMANHO, ..."
 							class="classeCard4Input"
-							// oninput={(e) => {
-							// 	atributoCorrente.chave = e.currentTarget.value.toUpperCase();
-							// }}
-
 							oninput={(e) => {
-								const novoValor = e.currentTarget.value.toUpperCase();
+								// Apenas transforma em maiúsculo enquanto digita
+								atributoCorrente.chave = e.currentTarget.value.toUpperCase();
+							}}
+							onchange={() => {
+								const valorlimpo = atributoCorrente.chave.trim();
 
-								if (chaveDuplicada(novoValor, atributoCorrente.id)) {
+								// Valida se ficou duplicado ao terminar de editar
+								if (chaveDuplicada(valorlimpo, atributoCorrente.id)) {
 									Swal.fire({
 										icon: 'warning',
 										text: 'Já existe um atributo com esse nome.',
 									});
-
-									atributoCorrente.chave = novoValor.slice(0, -1);
+									atributoCorrente.chave = ''; // Limpa o campo duplicado
 									return;
 								}
 
-								atributoCorrente.chave = novoValor;
-							}}
-							onchange={() => {
-								atributoCorrente.chave = atributoCorrente.chave.trim();
+								atributoCorrente.chave = valorlimpo;
 							}}
 						/>
 					</div>

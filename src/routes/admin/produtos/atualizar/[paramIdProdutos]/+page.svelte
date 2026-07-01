@@ -5,18 +5,26 @@
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
+
+	// svelte-ignore state_referenced_locally
+	// eslint-disable-next-line svelte/prefer-writable-derived
+	let dados = $state(structuredClone(data));
+
+	$effect(() => {
+		dados = structuredClone(data);
+	});
 </script>
 
 {#snippet snippetBotoes()}
 	<BotaoCancelar
-		voltarPara={data.lido?.campoAtivo
+		voltarPara={dados.lido?.campoAtivo
 			? '/admin/produtos/ler/ativos'
 			: '/admin/produtos/ler/inativos'}
 	/>
 	<BotaoSubmeter
-		dados={data}
+		{dados}
 		texto="SALVAR"
-		voltarPara={data.lido?.campoAtivo
+		voltarPara={dados.lido?.campoAtivo
 			? '/admin/produtos/ler/ativos'
 			: '/admin/produtos/ler/inativos'}
 	/>
@@ -29,9 +37,7 @@
 			{@render snippetBotoes()}
 		</div>
 	</div>
-	{#key data.inputs.formProdutos.idProdutos}
-		<FormularioDeProdutos dados={data} />
-	{/key}
+	<FormularioDeProdutos bind:dados />
 	<div class="flex justify-end gap-3">
 		{@render snippetBotoes()}
 	</div>

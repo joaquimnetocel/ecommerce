@@ -15,7 +15,9 @@
 	import FormularioDeVariantes from './FormularioDeVariantes.svelte';
 	import type { typeDados } from './typeDados';
 
-	let { dados }: { dados: typeDados } = $props();
+	let { dados = $bindable() }: { dados: typeDados } = $props();
+
+	// let dados = $state(structuredClone(data));
 </script>
 
 <Card class="classeCard1">
@@ -55,7 +57,7 @@
 				{dados.inputs.formProdutos.campoAtivo ? 'ATIVO' : 'INATIVO'}
 			</Label>
 		</div>
-		<FormularioDeImagens caminhoNoServidor="imagens/produtos" {dados} />
+		<FormularioDeImagens caminhoNoServidor="imagens/produtos" bind:dados />
 		<FormularioDeVariantes {dados} />
 		<FormularioDeCategorias
 			bind:selecionadas={dados.inputs.formCategorias}

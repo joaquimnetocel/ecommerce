@@ -23,7 +23,7 @@ export async function funcaoSubmeter({
 		didOpen: () => Swal.showLoading(),
 	});
 	const validacao = v.safeParse(schema, dados.inputs);
-	if (!validacao.success) {
+	if (validacao.success === false) {
 		dados.erros = funcaoErrosDoFormulario(validacao.issues);
 	} else {
 		dados.erros = {};
