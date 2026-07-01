@@ -9,7 +9,6 @@ import { funcaoCriarVariantes } from './funcaoCriarVariantes.server';
 export const remotaCriar = command(
 	schema,
 	async ({ formProdutos, formVariantes, formCategorias, formImagens }) => {
-		console.log(formCategorias);
 		await db.transaction(async (tx) => {
 			const produtoCriado = await funcaoCriarProduto({ executor: tx, formProdutos });
 			await funcaoCriarImagens({
