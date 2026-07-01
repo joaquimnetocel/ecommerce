@@ -1,10 +1,10 @@
-import { deriveds } from '../deriveds.svelte';
+import { derivedMapa } from '../deriveds.svelte';
 import { recursivaColetarIdsDosFilhos } from '../funcoes/recursivaColetarIdsDosFilhos';
-import { recursivaAtualizarPais } from './recursivaAtualizarPais';
-import { store } from './store.svelte';
+import { store } from '../index.svelte';
+import { acaoAtualizarPais } from './acaoAtualizarPais';
 
-export function funcaoCheckbox(id: string) {
-	const galho = deriveds.mapa().get(id);
+export function acaoCheckbox(id: string) {
+	const galho = derivedMapa().get(id);
 	if (!galho) return;
 	const marcado = store.selecionadas.has(id);
 	if (marcado) {
@@ -15,5 +15,5 @@ export function funcaoCheckbox(id: string) {
 	} else {
 		store.selecionadas.add(id);
 	}
-	recursivaAtualizarPais(galho);
+	acaoAtualizarPais(galho);
 }

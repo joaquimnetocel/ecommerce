@@ -6,14 +6,14 @@
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { Pencil, Plus, Trash2 } from '@lucide/svelte';
 	import CategoriaTree from './Item.svelte';
-	import { sweetalertApagar } from './funcoes/sweetalertApagar';
-	import { sweetalertEditar } from './funcoes/sweetalertEditar';
-	import { funcaoApagar } from './store/funcaoApagar';
-	import { funcaoCheckbox } from './store/funcaoCheckbox';
-	import { funcaoCriarSubcategoria } from './store/funcaoCriarSubcategoria';
-	import { funcaoEditar } from './store/funcaoEditar';
-	import { store } from './store/store.svelte';
-	import type { tipoGalho } from './tipoGalho';
+	import { acaoApagar } from './store/acoes/acaoApagar';
+	import { acaoCheckbox } from './store/acoes/acaoCheckbox';
+	import { acaoCriarSubcategoria } from './store/acoes/acaoCriarSubcategoria';
+	import { acaoEditar } from './store/acoes/acaoEditar';
+	import { sweetalertApagar } from './store/funcoes/sweetalertApagar';
+	import { sweetalertEditar } from './store/funcoes/sweetalertEditar';
+	import { store } from './store/index.svelte';
+	import type { tipoGalho } from './tipos/tipoGalho';
 
 	let {
 		galho,
@@ -43,7 +43,7 @@
 				class="cursor-pointer"
 				type="checkbox"
 				checked={store.selecionadas.has(galho.idCategorias)}
-				onchange={() => funcaoCheckbox(galho.idCategorias)}
+				onchange={() => acaoCheckbox(galho.idCategorias)}
 			/>
 			<span>{galho.campoNome}</span>
 		</Label>
@@ -54,7 +54,7 @@
 				onclick={async () => {
 					const novoNome = await sweetalertEditar(galho.campoNome);
 					if (novoNome) {
-						funcaoEditar(galho, novoNome);
+						acaoEditar(galho, novoNome);
 					}
 				}}
 			>
@@ -66,7 +66,7 @@
 				onclick={async () => {
 					const aux = await sweetalertApagar(galho.campoNome);
 					if (aux) {
-						funcaoApagar(galho);
+						acaoApagar(galho);
 					}
 				}}
 			>
@@ -98,7 +98,7 @@
 					store.inputs[galho.idCategorias] = (e.target as HTMLInputElement).value.toUpperCase();
 				}}
 				onkeydown={(e) => {
-					if (e.key === 'Enter') funcaoCriarSubcategoria(galho.idCategorias);
+					if (e.key === 'Enter') acaoCriarSubcategoria(galho.idCategorias);
 					if (e.key === 'Escape') {
 						if (store.criandoEm) delete store.inputs[store.criandoEm];
 						store.criandoEm = null;
@@ -109,7 +109,7 @@
 			<Button
 				class="cursor-pointer rounded border px-2 py-1 text-xs"
 				size="sm"
-				onclick={() => funcaoCriarSubcategoria(galho.idCategorias)}
+				onclick={() => acaoCriarSubcategoria(galho.idCategorias)}
 			>
 				CRIAR
 			</Button>

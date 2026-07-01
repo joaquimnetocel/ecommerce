@@ -1,8 +1,8 @@
 import { remotaCriar } from '../funcoes/remotaCriar.remote';
 import { sweetalertCriar } from '../funcoes/sweetalertCriar';
-import { store } from './store.svelte';
+import { store } from '../index.svelte';
 
-export async function funcaoCriarCategoria() {
+export async function acaoCriarCategoria() {
 	const digitado = await sweetalertCriar();
 	if (!digitado) return;
 	const inserido = await remotaCriar({

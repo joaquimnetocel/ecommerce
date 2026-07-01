@@ -10,8 +10,8 @@
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Label } from '$lib/shadcn/componentes/ui/label';
 	import { Textarea } from '$lib/shadcn/componentes/ui/textarea';
-	import FormularioDeCategorias from './FormularioDeCategorias/FormularioDeCategorias.svelte';
-	import FormularioDeImagens from './FormularioDeImagens/FormularioDeImagens.svelte';
+	import FormularioDeCategorias from './FormularioDeCategorias/index.svelte';
+	import FormularioDeImagens from './FormularioDeImagens/index.svelte';
 	import FormularioDeVariantes from './FormularioDeVariantes.svelte';
 	import type { typeDados } from './typeDados';
 

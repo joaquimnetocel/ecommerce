@@ -4,10 +4,10 @@
 	import { Input } from '$lib/shadcn/componentes/ui/input';
 	import { Plus } from '@lucide/svelte';
 	import Item from './Item.svelte';
-	import { deriveds } from './deriveds.svelte';
-	import { funcaoCriarCategoria } from './store/funcaoCriarCategoria';
-	import { store } from './store/store.svelte';
-	import type { tipoCategorias } from './tipoCategorias';
+	import { acaoCriarCategoria } from './store/acoes/acaoCriarCategoria';
+	import { derivedArvore, derivedArvoreFiltrada } from './store/deriveds.svelte';
+	import { store } from './store/index.svelte';
+	import type { tipoCategorias } from './tipos/tipoCategorias';
 
 	let {
 		dados,
@@ -18,8 +18,6 @@
 	$effect.pre(() => {
 		store.categorias = dados;
 	});
-
-	// 3. VIA DE SAÍDA (Avisa o Pai quando houver cliques nos checkboxes internos)
 </script>
 
 <Card class="gap-2 bg-slate-200 shadow-md">
@@ -27,13 +25,12 @@
 		<div class="flex items-center justify-between">
 			<CardTitle>CATEGORIAS</CardTitle>
 			<!-- <CardDescription class="text-sm text-white">INFORMAÇÕES GERAIS</CardDescription> -->
-			<Button class="cursor-pointer" onclick={funcaoCriarCategoria}><Plus /> CRIAR CATEGORIA</Button
-			>
+			<Button class="cursor-pointer" onclick={acaoCriarCategoria}><Plus /> CRIAR CATEGORIA</Button>
 		</div>
 	</CardHeader>
 
 	<CardContent class="space-y-4">
-		{#if deriveds.arvore().length > 0}
+		{#if derivedArvore().length > 0}
 			<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 				<Input
 					class="border-2 border-slate-400 bg-white"
@@ -45,10 +42,10 @@
 
 		<div class="space-y-4">
 			<ul>
-				{#if deriveds.arvoreFiltrada().length === 0}
+				{#if derivedArvoreFiltrada().length === 0}
 					<div class="text-center">NENHUMA CATEGORIA ENCONTRADA</div>
 				{:else}
-					{#each deriveds.arvoreFiltrada() as galho (galho.idCategorias)}
+					{#each derivedArvoreFiltrada() as galho (galho.idCategorias)}
 						<Item {galho} nivel={0} />
 					{/each}
 				{/if}
@@ -56,5 +53,3 @@
 		</div>
 	</CardContent>
 </Card>
-
-<!-- <pre>{JSON.stringify([...store.selecionadas], null, 2)}</pre> -->

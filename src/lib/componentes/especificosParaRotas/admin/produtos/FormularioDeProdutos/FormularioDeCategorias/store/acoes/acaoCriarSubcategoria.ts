@@ -1,7 +1,7 @@
 import { remotaCriar } from '../funcoes/remotaCriar.remote';
-import { store } from './store.svelte';
+import { store } from '../index.svelte';
 
-export async function funcaoCriarSubcategoria(idPai: string) {
+export async function acaoCriarSubcategoria(idPai: string) {
 	const nome = store.inputs[idPai]?.trim();
 	if (!nome) return;
 	const inserido = await remotaCriar({

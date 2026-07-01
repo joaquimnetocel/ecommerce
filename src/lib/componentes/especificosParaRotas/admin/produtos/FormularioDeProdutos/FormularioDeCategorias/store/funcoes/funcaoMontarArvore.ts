@@ -1,5 +1,5 @@
-import type { tipoCategorias } from '../tipoCategorias';
-import type { tipoGalho } from '../tipoGalho';
+import type { tipoCategorias } from '../../tipos/tipoCategorias';
+import type { tipoGalho } from '../../tipos/tipoGalho';
 
 export function funcaoMontarArvore(categorias: tipoCategorias): tipoGalho[] {
 	if (!categorias || !Array.isArray(categorias)) {

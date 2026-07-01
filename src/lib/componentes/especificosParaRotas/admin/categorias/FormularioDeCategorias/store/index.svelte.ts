@@ -1,4 +1,4 @@
-import type { tipoCategorias } from '../tipoCategorias';
+import type { tipoCategorias } from '../tipos/tipoCategorias';
 
 export const store = $state({
 	categorias: [] as tipoCategorias,

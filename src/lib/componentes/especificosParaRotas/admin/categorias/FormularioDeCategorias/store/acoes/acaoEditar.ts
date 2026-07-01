@@ -1,8 +1,8 @@
+import type { tipoGalho } from '../../tipos/tipoGalho';
 import { remotaEditar } from '../funcoes/remotaEditar.remote';
-import type { tipoGalho } from '../tipoGalho';
-import { store } from './store.svelte';
+import { store } from '../index.svelte';
 
-export async function funcaoEditar(galho: tipoGalho, novoNome: string) {
+export async function acaoEditar(galho: tipoGalho, novoNome: string) {
 	const editado = await remotaEditar({
 		idCategorias: galho.idCategorias,
 		campoNome: novoNome,
