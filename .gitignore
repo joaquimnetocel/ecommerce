@@ -23,5 +23,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 ## ADICIONADO POR MIM
-#/src/routes/(www)
+/src/routes/(www)
 /static/externos
