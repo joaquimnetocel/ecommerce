@@ -1,14 +1,22 @@
+import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
+import type { Pathname } from '$app/types';
 import { funcaoErrosDoFormulario } from '$lib/funcoes/funcaoErrosDoFormulario';
 import { sweetalertErro } from '$lib/sweetalerts/sweetalertErro';
 import Swal from 'sweetalert2';
 import * as v from 'valibot';
 import { schema } from '../schema';
 import type { typeDados } from '../typeDados';
-import { funcaoVoltar } from './funcaoVoltar';
 import { remotaAtualizar } from './remotaAtualizar/remotaAtualizar.remote';
 import { remotaCriar } from './remotaCriar/remotaCriar.remote';
 
-export async function funcaoSubmeter(dados: typeDados) {
+export async function funcaoSubmeter({
+	dados,
+	voltarPara,
+}: {
+	dados: typeDados;
+	voltarPara: Pathname;
+}) {
 	Swal.fire({
 		title: 'PROCESSANDO...',
 		allowOutsideClick: false,
@@ -25,7 +33,7 @@ export async function funcaoSubmeter(dados: typeDados) {
 			} else {
 				await remotaAtualizar(dados.inputs);
 			}
-			funcaoVoltar(dados.lido?.campoAtivo);
+			goto(resolve(voltarPara));
 		} catch (erro) {
 			await sweetalertErro(erro);
 		}
