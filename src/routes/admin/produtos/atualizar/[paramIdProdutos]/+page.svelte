@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BotaoApagarProduto from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/BotaoApagarProduto.svelte';
 	import BotaoCancelar from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/BotaoCancelar.svelte';
 	import BotaoSubmeter from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/BotaoSubmeter.svelte';
 	import FormularioDeProdutos from '$lib/componentes/especificosParaRotas/admin/produtos/FormularioDeProdutos/index.svelte';
@@ -16,18 +17,20 @@
 </script>
 
 {#snippet snippetBotoes()}
-	<BotaoCancelar
-		voltarPara={dados.lido?.campoAtivo
-			? '/admin/produtos/ler/ativos'
-			: '/admin/produtos/ler/inativos'}
-	/>
-	<BotaoSubmeter
-		{dados}
-		texto="SALVAR"
-		voltarPara={dados.lido?.campoAtivo
-			? '/admin/produtos/ler/ativos'
-			: '/admin/produtos/ler/inativos'}
-	/>
+	<div>
+		<BotaoCancelar
+			voltarPara={dados.lido?.campoAtivo
+				? '/admin/produtos/ler/ativos'
+				: '/admin/produtos/ler/inativos'}
+		/>
+		<BotaoSubmeter
+			{dados}
+			texto="SALVAR"
+			voltarPara={dados.lido?.campoAtivo
+				? '/admin/produtos/ler/ativos'
+				: '/admin/produtos/ler/inativos'}
+		/>
+	</div>
 {/snippet}
 
 <div class="space-y-6">
@@ -38,7 +41,15 @@
 		</div>
 	</div>
 	<FormularioDeProdutos bind:dados />
-	<div class="flex justify-end gap-3">
+	<div class="flex justify-between gap-3">
+		<div>
+			<BotaoApagarProduto
+				{dados}
+				voltarPara={dados.lido?.campoAtivo
+					? '/admin/produtos/ler/ativos'
+					: '/admin/produtos/ler/inativos'}
+			/>
+		</div>
 		{@render snippetBotoes()}
 	</div>
 </div>

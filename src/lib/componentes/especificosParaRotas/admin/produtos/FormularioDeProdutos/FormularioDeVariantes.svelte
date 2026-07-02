@@ -83,20 +83,27 @@
 							{#if corrente.contadorOriginal === 0}
 								<div>VARIANTE PADRÃO</div>
 							{:else if corrente.variante.idVariantes === undefined}
-								<div class="flex justify-end">
-									<Button
-										onclick={() => {
-											dados.inputs.formVariantes.splice(corrente.contadorOriginal, 1);
-											estadosParaEach.splice(corrente.contadorOriginal, 1);
-										}}
-										variant="destructive"
-										class="cursor-pointer"
-									>
-										REMOVER VARIANTE
-									</Button>
-								</div>
+								<Button
+									onclick={() => {
+										dados.inputs.formVariantes.splice(corrente.contadorOriginal, 1);
+										estadosParaEach.splice(corrente.contadorOriginal, 1);
+									}}
+									variant="destructive"
+									class="cursor-pointer"
+								>
+									REMOVER VARIANTE
+								</Button>
 							{:else}
-								<div>VARIANTE SALVA</div>
+								<Button
+									onclick={() => {
+										dados.inputs.formVariantes.splice(corrente.contadorOriginal, 1);
+										estadosParaEach.splice(corrente.contadorOriginal, 1);
+									}}
+									variant="destructive"
+									class="cursor-pointer"
+								>
+									APAGAR VARIANTE
+								</Button>
 							{/if}
 						</div>
 					{/snippet}

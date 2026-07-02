@@ -12,7 +12,11 @@ export const remotaAtualizar = command(
 	async ({ formProdutos, formVariantes, formCategorias, formImagens }) => {
 		await db.transaction(async (tx) => {
 			await funcaoAtualizarProduto({ executor: tx, formProdutos });
-			await funcaoAtualizarVariantes({ executor: tx, formVariantes });
+			await funcaoAtualizarVariantes({
+				executor: tx,
+				formVariantes,
+				keyProdutos: formProdutos.idProdutos,
+			});
 			if (formProdutos.idProdutos !== undefined) {
 				await funcaoCriarImagens({
 					executor: tx,
